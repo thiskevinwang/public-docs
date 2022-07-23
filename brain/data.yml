@@ -1,0 +1,29 @@
+---
+- name: Overview
+  href: /brain
+  singleFile: true
+- name: Cloud
+  href: /brain/cloud/overview
+  posts:
+    - name: Amazon Web Services (AWS)
+      href: /brain/cloud/aws
+    - name: Google Cloud Platform (GCP)
+      href: /brain/cloud/gcp
+- name: Databases
+  href: /brain/databases/overview
+  posts:
+    - name: DynamoDB
+      href: /brain/databases/dynamo/overview
+      posts: []
+    - name: PostgreSQL
+      href: /brain/databases/postgres/overview
+      posts:
+        - name: Management
+          href: /brain/databases/postgres/management
+        - name: Queries
+          href: /brain/databases/postgres/queries
+- name: Other
+  separator: true
+- name: Miscellaneous
+  href: /brain/misc
+  singleFile: true
