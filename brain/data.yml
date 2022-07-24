@@ -22,6 +22,19 @@
           href: /brain/databases/postgres/management
         - name: Queries
           href: /brain/databases/postgres/queries
+- name: GitHub
+  href: /brain/github/overview
+  posts:
+    - name: API
+      href: /brain/github/api/overview
+      posts:
+        - name: GraphQL (v4)
+          href: /brain/github/api/graphql
+        - name: REST (v3)
+          href: /brain/github/api/rest
+    - name: Actions
+      href: /brain/github/actions
+      singleFile: true
 - name: Other
   separator: true
 - name: Miscellaneous
