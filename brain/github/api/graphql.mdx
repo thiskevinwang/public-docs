@@ -1,0 +1,24 @@
+---
+name: GitHub GraphQL API (v4)
+---
+
+https://docs.github.com/en/graphql/overview/explorer
+
+```graphql
+query GetFileContents($owner: String!, $name: String!, $expression: String!) {
+  rateLimit {
+    used
+    remaining
+  }
+  repository(owner: $owner, name: $name) {
+    name
+    object(expression: $expression) {
+      __typename
+      id
+      ... on Blob {
+        text
+      }
+    }
+  }
+}
+```
