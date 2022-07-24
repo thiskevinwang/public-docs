@@ -3,9 +3,19 @@ name: Random
 description: Random
 ---
 
-# h1
+# Nix Shell
 
-Do ullamco occaecat ea cupidatat anim mollit et nulla cupidatat ut. Nulla duis aliqua est excepteur consequat proident ipsum. Duis dolore nulla in aute cillum ea occaecat eiusmod ut anim enim. Eu sint do occaecat anim exercitation ut tempor consectetur in sunt ipsum duis ea. Quis est esse nisi do. Elit exercitation in nisi ut magna ex exercitation nulla nostrud. Eu incididunt laboris reprehenderit non ipsum eiusmod exercitation ex velit amet est labore ipsum.
+```bash
+nix-shell -p libuuid
+
+# [nix-shell:~/repos/thekevinwang.com]$
+```
+
+```bash
+uuidgen | tr [:upper:] [:lower:]
+
+# ...some uuid
+```
 
 ## h2
 
