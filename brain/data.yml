@@ -1,6 +1,6 @@
 ---
 - name: Overview
-  href: /brain
+  href: /brain/overview
   singleFile: true
 - name: Cloud
   href: /brain/cloud/overview
