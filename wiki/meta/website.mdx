@@ -13,6 +13,22 @@ description: Some fun facts
 
 ## Hacks
 
+```
+2022-07-26T15:21:52.126Z 7a4c4448-ae7c-51e6-a205-1f12a6c7d568 INFO wiki/[...slug].tsx getStaticProps error Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'vscode-oniguruma' imported from /Users/kevin/repos/thekevinwang.com/node_modules/@wooorm/starry-night/lib/get-oniguruma.js
+at new NodeError (/var/task/chunks/5292.js:37228:5)
+at packageResolve (/var/task/chunks/5292.js:38364:9)
+at moduleResolve (/var/task/chunks/5292.js:38420:18)
+at defaultResolve (/var/task/chunks/5292.js:38458:13)
+at resolve (/var/task/chunks/5292.js:38497:12)
+at getOniguruma (/var/task/chunks/5292.js:38511:24)
+at createOniguruma (/var/task/chunks/5292.js:39040:25)
+at createRegistry (/var/task/chunks/5292.js:39010:16)
+at createStarryNight (/var/task/chunks/5292.js:38914:31)
+at Function.rehypeStarryNight (/var/task/chunks/2387.js:99:64) {
+code: 'ERR_MODULE_NOT_FOUND'
+}
+```
+
 For ISR to work, I need to do this:
 
 ```diff filename="./node_modules/@wooorm/starry-night/lib/get-oniguruma.js"
