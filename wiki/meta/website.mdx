@@ -1,0 +1,29 @@
+---
+name: This site itself
+---
+
+# Stack
+
+- https://nextjs.org/
+- https://mdxjs.com/blog/v2/
+- https://github.com/serverless-nextjs/serverless-next.js
+- https://aws.amazon.com/
+
+## Hacks
+
+For ISR to work, I need to do this:
+
+```diff filename="./node_modules/@wooorm/starry-night/lib/get-oniguruma.js"
+-  import fs from 'node:fs/promises'
+-  import {resolve} from 'import-meta-resolve'
+
+  /** Node w/o fetch. */
+  export async function getOniguruma() {
++   return await await fetch('https://esm.sh/vscode-oniguruma@1/release/onig.wasm')
+-   const pkgUrl = await resolve('vscode-oniguruma', import.meta.url)
+-   return fs.readFile(new URL('onig.wasm', pkgUrl))
+  }
+```
+
+`import.meta.url` evaluates to a local path, that is then shipped to the
+regneration lambda function, which obviously doesn't work.
