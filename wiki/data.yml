@@ -1,42 +1,42 @@
 ---
 - name: Overview
-  href: /brain/overview
+  href: /wiki/overview
   singleFile: true
 - name: Cloud
-  href: /brain/cloud/overview
+  href: /wiki/cloud/overview
   posts:
     - name: Amazon Web Services (AWS)
-      href: /brain/cloud/aws
+      href: /wiki/cloud/aws
     - name: Google Cloud Platform (GCP)
-      href: /brain/cloud/gcp
+      href: /wiki/cloud/gcp
 - name: Databases
-  href: /brain/databases/overview
+  href: /wiki/databases/overview
   posts:
     - name: DynamoDB
-      href: /brain/databases/dynamo/overview
+      href: /wiki/databases/dynamo/overview
       posts: []
     - name: PostgreSQL
-      href: /brain/databases/postgres/overview
+      href: /wiki/databases/postgres/overview
       posts:
         - name: Management
-          href: /brain/databases/postgres/management
+          href: /wiki/databases/postgres/management
         - name: Queries
-          href: /brain/databases/postgres/queries
+          href: /wiki/databases/postgres/queries
 - name: GitHub
-  href: /brain/github/overview
+  href: /wiki/github/overview
   posts:
     - name: API
-      href: /brain/github/api/overview
+      href: /wiki/github/api/overview
       posts:
         - name: GraphQL (v4)
-          href: /brain/github/api/graphql
+          href: /wiki/github/api/graphql
         - name: REST (v3)
-          href: /brain/github/api/rest
+          href: /wiki/github/api/rest
     - name: Actions
-      href: /brain/github/actions
+      href: /wiki/github/actions
       singleFile: true
 - name: Other
   separator: true
 - name: Miscellaneous
-  href: /brain/misc
+  href: /wiki/misc
   singleFile: true
