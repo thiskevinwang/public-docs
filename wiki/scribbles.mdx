@@ -1,0 +1,140 @@
+---
+name: Scribbles
+---
+
+## Tree
+
+<Container wrapper direction={["column", "row"]}>
+  <Container>
+    <b>BEFORE</b>
+    <Spacer />
+    <TreeLocal>
+      <FolderLocal name="./ptfe-releases" defaultOpen>
+        <FolderLocal name="website" defaultOpen>
+          <FolderLocal name="data" defaultOpen>
+            <FileLocal name="enterprise-nav-data.json" />
+          </FolderLocal>
+          <FolderLocal name="docs" defaultOpen>
+            <FolderLocal name="enterprise" defaultOpen>
+              <FolderLocal name="admin" />
+              <FileLocal name="index.mdx" />
+              <FolderLocal name="install" />
+              <FolderLocal name="operational-modes" />
+              <FolderLocal name="reference-architecture" />
+              <FolderLocal name="releases" />
+              <FolderLocal name="requirements" />
+              <FolderLocal name="saml" />
+              <FolderLocal name="support" />
+              <FolderLocal name="system-overview" />
+            </FolderLocal>
+          </FolderLocal>
+          <FolderLocal name="img" defaultOpen>
+            <FolderLocal name="docs" defaultOpen>
+              <FileLocal name="..." />
+            </FolderLocal>
+          </FolderLocal>
+        </FolderLocal>
+      </FolderLocal>
+    </TreeLocal>
+  </Container>
+  <Container>
+    <b>AFTER</b>
+    <Spacer />
+    <TreeLocal>
+      <TreeLocal>
+        <FolderLocal name="./ptfe-releases" defaultOpen>
+          <FolderLocal name="website" defaultOpen>
+            <FolderLocal name="data" defaultOpen>
+              <FileLocal
+                name="cloud-docs-nav-data.json"
+                style={{ color: "#2e8540", fontWeight: "bold" }}
+              />
+              <FileLocal name="enterprise-nav-data.json" />
+            </FolderLocal>
+            <FolderLocal name="docs" defaultOpen>
+              <FolderLocal name="enterprise" defaultOpen>
+                <FolderLocal name="admin" />
+                <FolderLocal
+                  name="api-docs"
+                  style={{ color: "#2e8540", fontWeight: "bold" }}
+                />
+                <FolderLocal
+                  name="architectural-details"
+                  style={{ color: "#2e8540", fontWeight: "bold" }}
+                />
+                <FolderLocal
+                  name="cost-estimation"
+                  style={{ color: "#2e8540", fontWeight: "bold" }}
+                />
+                <FileLocal name="index.mdx" />
+                <FolderLocal name="install" />
+                <FolderLocal
+                  name="integrations"
+                  style={{ color: "#2e8540", fontWeight: "bold" }}
+                />
+                <FolderLocal
+                  name="migrate"
+                  style={{ color: "#2e8540", fontWeight: "bold" }}
+                />
+                <FolderLocal name="operational-modes" />
+                <FileLocal
+                  name="overview.mdx"
+                  style={{ color: "#2e8540", fontWeight: "bold" }}
+                />
+                <FolderLocal
+                  name="recommended-practices"
+                  style={{ color: "#2e8540", fontWeight: "bold" }}
+                />
+                <FolderLocal name="reference-architecture" />
+                <FolderLocal
+                  name="registry"
+                  style={{ color: "#2e8540", fontWeight: "bold" }}
+                />
+                <FolderLocal name="releases" />
+                <FolderLocal name="requirements" />
+                <FolderLocal
+                  name="run"
+                  style={{ color: "#2e8540", fontWeight: "bold" }}
+                />
+                <FolderLocal name="saml" />
+                <FolderLocal
+                  name="sentinel"
+                  style={{ color: "#2e8540", fontWeight: "bold" }}
+                />
+                <FolderLocal name="support" />
+                <FolderLocal name="system-overview" />
+                <FolderLocal
+                  name="users-teams-organizations"
+                  style={{ color: "#2e8540", fontWeight: "bold" }}
+                />
+                <FolderLocal
+                  name="vcs"
+                  style={{ color: "#2e8540", fontWeight: "bold" }}
+                />
+                <FolderLocal
+                  name="workspaces"
+                  style={{ color: "#2e8540", fontWeight: "bold" }}
+                />
+              </FolderLocal>
+            </FolderLocal>
+            <FolderLocal name="img" defaultOpen>
+              <FolderLocal name="docs" defaultOpen>
+                <FileLocal name="..." />
+                <FileLocal
+                  name="2fa-backup-codes.png"
+                  style={{ color: "#2e8540", fontWeight: "bold" }}
+                />
+                <FileLocal
+                  name="..."
+                  style={{ color: "#2e8540", fontWeight: "bold" }}
+                />
+              </FolderLocal>
+            </FolderLocal>
+          </FolderLocal>
+        </FolderLocal>
+      </TreeLocal>
+    </TreeLocal>
+  </Container>
+</Container>
+
+<Spacer y={4} />
