@@ -13,7 +13,7 @@ description: Some fun facts
 
 ## Hacks
 
-```
+```bash showLineNumbers
 2022-07-26T15:21:52.126Z 7a4c4448-ae7c-51e6-a205-1f12a6c7d568 INFO wiki/[...slug].tsx getStaticProps error Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'vscode-oniguruma' imported from /Users/kevin/repos/thekevinwang.com/node_modules/@wooorm/starry-night/lib/get-oniguruma.js
 at new NodeError (/var/task/chunks/5292.js:37228:5)
 at packageResolve (/var/task/chunks/5292.js:38364:9)
@@ -32,8 +32,8 @@ code: 'ERR_MODULE_NOT_FOUND'
 For ISR to work, I need to do this:
 
 ```diff filename="./node_modules/@wooorm/starry-night/lib/get-oniguruma.js"
--  import fs from 'node:fs/promises'
--  import {resolve} from 'import-meta-resolve'
+- import fs from 'node:fs/promises'
+- import {resolve} from 'import-meta-resolve'
 
   /** Node w/o fetch. */
   export async function getOniguruma() {

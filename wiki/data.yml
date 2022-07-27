@@ -22,6 +22,11 @@
           href: /wiki/databases/postgres/management
         - name: Queries
           href: /wiki/databases/postgres/queries
+- name: Docker
+  href: /wiki/docker/overview
+  posts:
+    - name: Auth
+      href: /wiki/docker/auth
 - name: GitHub
   href: /wiki/github/overview
   posts:
@@ -33,7 +38,7 @@
         - name: REST (v3)
           href: /wiki/github/api/rest
     - name: Actions
-      href: /wiki/github/actions
+      href: /wiki/github/actions/overview
       singleFile: true
 - name: Meta
   href: /wiki/meta/website
@@ -42,4 +47,7 @@
   separator: true
 - name: Miscellaneous
   href: /wiki/misc
+  singleFile: true
+- name: Scribbles
+  href: /wiki/scribbles
   singleFile: true
