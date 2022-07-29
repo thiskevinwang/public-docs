@@ -40,6 +40,9 @@
     - name: Actions
       href: /wiki/github/actions/overview
       singleFile: true
+    - name: Releases
+      href: /wiki/github/releases/overview
+      singleFile: true
 - name: Meta
   href: /wiki/meta/website
   posts: []
