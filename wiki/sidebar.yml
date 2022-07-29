@@ -43,6 +43,11 @@
 - name: Meta
   href: /wiki/meta/website
   posts: []
+- name: Life
+  separator: true
+- name: Hobbies
+  href: /wiki/hobbies/overview
+  posts: []
 - name: Other
   separator: true
 - name: Miscellaneous
