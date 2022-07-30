@@ -6,7 +6,10 @@
   href: /wiki/cloud/overview
   posts:
     - name: Amazon Web Services (AWS)
-      href: /wiki/cloud/aws
+      href: /wiki/cloud/aws/overview
+      posts:
+        - name: S3
+          href: /wiki/cloud/aws/s3
     - name: Google Cloud Platform (GCP)
       href: /wiki/cloud/gcp
 - name: Databases
@@ -42,6 +45,12 @@
       singleFile: true
     - name: Releases
       href: /wiki/github/releases/overview
+      singleFile: true
+- name: Go
+  href: /wiki/go/overview
+  posts:
+    - name: Template
+      href: /wiki/go/template
       singleFile: true
 - name: Meta
   href: /wiki/meta/website
