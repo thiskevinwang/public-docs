@@ -37,7 +37,7 @@ For ISR to work, I need to do this:
 
   /** Node w/o fetch. */
   export async function getOniguruma() {
-+   return await await fetch('https://esm.sh/vscode-oniguruma@1/release/onig.wasm')
++   return await fetch('https://esm.sh/vscode-oniguruma@1/release/onig.wasm')
 -   const pkgUrl = await resolve('vscode-oniguruma', import.meta.url)
 -   return fs.readFile(new URL('onig.wasm', pkgUrl))
   }

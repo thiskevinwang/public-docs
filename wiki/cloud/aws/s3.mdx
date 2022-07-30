@@ -1,0 +1,99 @@
+## List Buckets
+
+https://docs.aws.amazon.com/cli/latest/reference/s3/ls.html
+
+```bash
+aws s3 ls
+```
+
+```bash
+BUCKET=tkwslsnextstack-nextjsapppublicassets04474af7-1jolfeqm0nx24
+aws s3 ls s3://${BUCKET} --recursive
+```
+
+## Context
+
+Given I have a bucket like:
+
+<TreeLocal style={{ "--geist-background": "var(--accents-1)" }}>
+  <FolderLocal name="{{BUCKET}}" defaultOpen>
+    <FolderLocal name="_next/" defaultOpen></FolderLocal>
+    <FolderLocal name="/" defaultOpen>
+      <FolderLocal name="BUILD_ID/" defaultOpen>
+        <FileLocal name="BUILD_ID" />
+      </FolderLocal>
+    </FolderLocal>
+    <FolderLocal name="public/" defaultOpen></FolderLocal>
+    <FolderLocal name="static-pages/" defaultOpen>
+      <FolderLocal
+        name="{{BUILD_ID}}/"
+        defaultOpen
+        style={{ color: "var(--geist-selection)" }}
+      >
+        <FileLocal name="index.html" />
+        <FolderLocal name="wiki/" defaultOpen>
+          <FolderLocal name="github/" defaultOpen>
+            <FolderLocal name="api/" defaultOpen>
+              <FileLocal name="overview.html" />
+            </FolderLocal>
+          </FolderLocal>
+        </FolderLocal>
+      </FolderLocal>
+    </FolderLocal>
+  </FolderLocal>
+</TreeLocal>
+
+`{{BUILD_ID}}` is a dynamic value
+
+## Print Object Contents
+
+```bash
+aws s3api get-object --bucket=$BUCKET --key=/BUILD_ID/BUILD_ID --range bytes=0-10000 /dev/stdout | head
+aws s3api get-object --bucket=$BUCKET --key=/BUILD_ID/BUILD_ID --range bytes=0-10000 | cat | head -100
+```
+
+## List Objects
+
+```bash
+aws s3api list-objects-v2 --bucket=$BUCKET --prefix=/BUILD_ID/BUILD_ID | yq -P
+```
+
+## Get Version/Modification history
+
+Last modified exists for non-versioned objects, but only goes as far back as the last modification
+
+```bash
+BUILD_ID=GfavrFILpL-QVpbstQWJs
+aws s3api get-object --bucket=$BUCKET --key=static-pages/$BUILD_ID/wiki/github/api/overview.html --range bytes=0-10000 /dev/stdout
+```
+
+```bash
+aws s3api list-object-versions \
+    --bucket=$BUCKET \
+    --prefix=static-pages/$BUILD_ID/wiki/github/api/overview.html \
+    --output yaml
+```
+
+```yaml
+Versions:
+  - ETag: '"607348acc0b363e2e6798ac85361a123"'
+    IsLatest: true
+    Key: static-pages/GfavrFILpL-QVpbstQWJs/wiki/github/api/overview.html
+    LastModified: "2022-07-30T21:39:55+00:00"
+    Owner:
+      DisplayName: kwangsan
+      ID: 05de1537e54ec7d43004182dad0ff16474d1a207a63a2f9d00a46233e16ae410
+    Size: 51047
+    StorageClass: STANDARD
+    VersionId: 45F5lsrQTjtzzwc6dClAzCTZV5_ZgO3t
+  - ETag: '"8aa571bb4b084ac1c3f4de8e97467c3b"'
+    IsLatest: false
+    Key: static-pages/GfavrFILpL-QVpbstQWJs/wiki/github/api/overview.html
+    LastModified: "2022-07-29T15:20:32+00:00"
+    Owner:
+      DisplayName: kwangsan
+      ID: 05de1537e54ec7d43004182dad0ff16474d1a207a63a2f9d00a46233e16ae410
+    Size: 51047
+    StorageClass: STANDARD
+    VersionId: "null"
+```
