@@ -8,6 +8,8 @@
     - name: Amazon Web Services (AWS)
       href: /wiki/cloud/aws/overview
       posts:
+        - name: CloudWatch
+          href: /wiki/cloud/aws/cloudwatch
         - name: S3
           href: /wiki/cloud/aws/s3
     - name: Google Cloud Platform (GCP)

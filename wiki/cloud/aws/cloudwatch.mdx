@@ -1,0 +1,81 @@
+---
+name: CloudWatch
+description: Logging, monitoring, alerting, etc.
+---
+
+> **Warning**: This section is under construction
+
+🤨 AWS docs use `sql` syntax highlighting for CloudWatch query syntax... but why?!
+
+## Log Groups & Log Streams
+
+Each Lambda function will have a Log Group
+
+If you have a Lambda function named `my-function`, the log group will look like
+`/aws/lambda/my-function`. If the lambda is deployed to `Lambda@Edge`, the log group
+will look like `/aws/lambda/<REGION>.<FUNCTION_NAME>`.
+
+| Kind        | Format                                 | Example                             |
+| ----------- | -------------------------------------- | ----------------------------------- |
+| Regular     | `/aws/lambda/<FUNCTION_NAME>`          | `/aws/lambda/my-function`           |
+| Lambda@Edge | `/aws/lambda/<REGION>.<FUNCTION_NAME>` | `/aws/lambda/us-east-1.my-function` |
+
+### Log Streams
+
+Each log group will have multiple log streams.
+
+| Format                              | Example                                                |
+| ----------------------------------- | ------------------------------------------------------ |
+| `YYYY/MM/DD/[<VERSION>]<guid>` [^1] | `2021/11/19/[$LATEST]edc7a5a6e16c4b83bd1da40a33bc706e` |
+
+[^1]:
+    The `<VERSION>` is the version of the Lambda function.
+    This could numeric values like `1`,`2`...`139` or `$LATEST`.
+
+# Logs Insights
+
+## `p99`, `p95`, `p67`, `p50`,
+
+> **Note**: `p99` is your _99th percentile_ or top 1% of your user group or data pool.
+
+The following CloudWatch query can be visualized as a line, and will depict function
+duration (or latency) as the `p99/95/67/50` for every 10 minutes.
+
+- `p50` is your average case; 50% of function invocations
+- `p99` is your worst case; 1% of function invocations
+
+```sql showLineNumbers filename="/aws/lambda/us-east-1.my-lambda-function"
+fields @timestamp, @duration as d
+    | filter ispresent(d)
+    | sort @timestamp desc
+    | stats max(d) as max_MS,
+      percentile(d, 99) as p99,
+      percentile(d, 95) as p95,
+      percentile(d, 67) as p67,
+      percentile(d, 50) as p50 by bin(10m)
+    | limit 10000
+```
+
+## Memory Usage
+
+> **Note**: See [**Queries for Lambda logs**](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/CWL_QuerySyntax-examples.html)
+
+```sql showLineNumbers
+fields @timestamp, @message
+    | sort @timestamp desc
+    | limit 50
+    | filter @type = "REPORT"
+    | stats max(@memorySize / 1000 / 1000) as PROVISIONED_MB,
+      min(@maxMemoryUsed / 1000 / 1000) as MIN_MB,
+      avg(@maxMemoryUsed / 1000 / 1000) as AVG_MB,
+      max(@maxMemoryUsed / 1000 / 1000) as MAX_MB,
+      MAX_MB / PROVISIONED_MB * 100 as PERCENT_MAX
+```
+
+# Creating a Dashboard with CDK
+
+...🙄...
+
+# Alerting
+
+?
