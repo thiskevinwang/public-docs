@@ -1,46 +1,9 @@
-## Example
+---
+name: Template
+---
 
-https://go.dev/play/p/jJYrRYA7wX
+> **Warning**: This section is under construction
 
-```go filename="https://go.dev/play/p/jJYrRYA7wX" showLineNumbers
-package main
-
-import (
-	"html/template"
-	"os"
-	"strings"
-)
-
-type View struct {
-	Name string
-	Func template.FuncMap
-}
-
-var V = new(View)
-
-func main() {
-	V.Name = "Go"
-	V.Func = template.FuncMap{
-		"lower": strings.ToLower,
-	}
-
-	//fails(V)
-	works(V)
-}
-
-func fails(V *View) {
-	t := template.New("lower template")
-	t, _ = t.Parse("<a href=\"/wiki/{{lower .Name}}\" title=\"{{.Name}}\"> {{.Name}}")
-	t.Execute(os.Stdout, V)
-}
-
-func works(V *View) {
-	t := template.New("lower template")
-	t, _ = t.Parse("<a href=\"/wiki/{{.Name}}\" title=\"{{.Name}}\"> {{.Name}}")
-	t.Execute(os.Stdout, V)
-}
-```
-
-## How `helm` handles it
+## How `helm` handles templates
 
 https://github.com/helm/helm/blob/main/pkg/engine/funcs.go
