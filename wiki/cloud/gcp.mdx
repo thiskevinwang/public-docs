@@ -3,18 +3,43 @@ name: Google Cloud Platform (GCP)
 description: What I know about GCP
 ---
 
+> **Warning**: This section is under construction
+
 # GCP
+
+What I’ve touched...
+
+- Vision API
+- Cloud Run
+- Artifact Registry
+- Kubernetes Engine
+
+## Vision API
+
+I have pretty limited experience with GCP. In my time at Capsule (around Winter 2020), I
+built a proof of concept for insurance card image text extraction. I used the Vision API
+in conjunction with Cloud Functions V1 to make a serverless API endpoint that would return
+JSON data of extracted text. I only ran minimal model training on a small dataset of images,
+and that was quite expensive and **highly manual** (I had to use the web UI and manually drag
+boxes around specific insurance card fields). I never got around to implementing the association
+of text to insurance fields, like "bin number" and "group number", **and** the project was eventually
+derailed by internal misalignment — basically it was cut short, but was certainly fun while
+it lasted.
+
+## Kubernetes Engine
+
+I’m currently running a [Waypoint](https://www.waypointproject.io/) server and runner on
+an _Autopilot_ Kubernetes cluster, hosted on Kubernetes Engine. It costs about $30/month.
+
+## Cloud Run
+
+I only recently (July 2022) came across Cloud Run. It’s basically _Docker containers on
+Lambda_. Here's a Deno `fresh` instance running on Cloud Run:
+
+- https://deno-fresh-r6og3wfz2a-uc.a.run.app
+
+## Misc
 
 GCP x Waypoint
 
 https://myshittycode.com/2019/10/30/gcp-terraform-google-could-not-find-default-credentials-error/
-
-# h1
-
-Do ullamco occaecat ea cupidatat anim mollit et nulla cupidatat ut. Nulla duis aliqua est excepteur consequat proident ipsum. Duis dolore nulla in aute cillum ea occaecat eiusmod ut anim enim. Eu sint do occaecat anim exercitation ut tempor consectetur in sunt ipsum duis ea. Quis est esse nisi do. Elit exercitation in nisi ut magna ex exercitation nulla nostrud. Eu incididunt laboris reprehenderit non ipsum eiusmod exercitation ex velit amet est labore ipsum.
-
-## h2
-
-Esse tempor ullamco amet veniam laborum exercitation ad tempor adipisicing in. Fugiat fugiat officia qui reprehenderit ut ea tempor commodo officia ipsum. Anim qui ex velit velit proident ex laboris deserunt pariatur duis ex. Eu excepteur adipisicing est non id. Consectetur culpa sit et nostrud nostrud ad. Commodo ut ut consequat minim ut excepteur occaecat nulla labore exercitation magna esse.
-
-### h3

@@ -1,7 +1,9 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as assert from "assert";
+
 import chalk from "chalk"; // v4
+import _ from "lodash";
 
 import flat from "flat";
 import matter from "gray-matter";
@@ -69,7 +71,17 @@ async function main() {
   event("gathering paths from wiki/");
   const b = getPathsFromMdx().sort();
 
-  assert.equal(a.length, b.length, `lengths must be equal` + `\n`);
+  const aDiff = _.difference(a, b);
+  const bDiff = _.difference(b, a);
+
+  assert.ok(
+    _.isEmpty(aDiff),
+    `YML list contains extra paths: [${aDiff.join(",")}]`
+  );
+  assert.ok(
+    _.isEmpty(bDiff),
+    `MDX list contains extra paths: [${bDiff.join(",")}]`
+  );
 
   for (let i = 0; i < a.length; i++) {
     assert.equal(

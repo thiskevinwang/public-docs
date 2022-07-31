@@ -54,7 +54,11 @@
       singleFile: true
 - name: Meta
   href: /wiki/meta/website
-  posts: []
+  posts:
+    - name: Sidebar
+      href: /wiki/meta/sidebar
+    - name: Regeneration History
+      href: /wiki/meta/regeneration-history
 - name: Life
   separator: true
 - name: Hobbies
