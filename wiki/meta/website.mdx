@@ -72,3 +72,100 @@ EOF
 # Alternatively, `cat` a file's contents over the file to be patched
 # cat $(pwd)/scripts/get-oniguruma.js > $file_to_patch
 ```
+
+# After introducing Mermaid Tooling
+
+> \_projectRoot is undefined. Unable to create a BrowserFetcher.
+
+```bash
+@ingestionTime
+1659502572398
+@log
+058050752201:/aws/lambda/TkwSlsNextStack-NextJsAppRegenerationFunction62381-NMtGlXeCiUfY
+@logStream
+2022/08/03/[$LATEST]7c3026d8d4ad48ff87efc496f86df081
+@message
+2022-08-03T04:56:05.356Z 1e8b645a-e5f4-56d9-a5ee-3f3ee7ec0c46 ERROR Invoke Error {"errorType":"Error","errorMessage":"_projectRoot is undefined. Unable to create a BrowserFetcher.","stack":["Error: _projectRoot is undefined. Unable to create a BrowserFetcher."," at resolveExecutablePath (/var/task/chunks/4545.js:86251:15)"," at ChromeLauncher.launch (/var/task/chunks/4545.js:85667:53)"," at async transformer (/var/task/pages/wiki/[...slug].js:345:25)"]}
+@requestId
+1e8b645a-e5f4-56d9-a5ee-3f3ee7ec0c46
+@timestamp
+1659502565356
+errorMessage
+_projectRoot is undefined. Unable to create a BrowserFetcher.
+errorType
+Error
+stack.0
+Error: _projectRoot is undefined. Unable to create a BrowserFetcher.
+stack.1
+at resolveExecutablePath (/var/task/chunks/4545.js:86251:15)
+stack.2
+at ChromeLauncher.launch (/var/task/chunks/4545.js:85667:53)
+stack.3
+at async transformer (/var/task/pages/wiki/[...slug].js:345:25)
+```
+
+```typescript filename="regeneration-lambda/chunks/4545.js"
+function resolveExecutablePath(launcher) {
+  const { product, _isPuppeteerCore, _projectRoot, _preferredRevision } = launcher;
+  //......
+  if (!_projectRoot) {
+    throw new Error(
+      "_projectRoot is undefined. Unable to create a BrowserFetcher."
+    );
+  }
+```
+
+```typescript filename="regeneration-lambda/chunks/4545.js"
+        else if (!chromeExecutable) {
+            const { missingText, executablePath } = resolveExecutablePath(this);
+            if (missingText) {
+                throw new Error(missingText);
+            }
+            chromeExecutable = executablePath;
+        }
+```
+
+```typescript filename="regeneration-lambda/chunks/4545.js" showLineNumbers=86279
+/**
+ * @internal
+ */
+function createLauncher(
+  projectRoot,
+  preferredRevision,
+  isPuppeteerCore,
+  product = "chrome"
+) {
+  switch (product) {
+    case "firefox":
+      return new FirefoxLauncher(
+        projectRoot,
+        preferredRevision,
+        isPuppeteerCore
+      );
+    case "chrome":
+      return new ChromeLauncher(
+        projectRoot,
+        preferredRevision,
+        isPuppeteerCore
+      );
+  }
+}
+```
+
+So I need to install chrome on my lambda
+
+Google: install google chrome on lambda
+
+1. https://stackoverflow.com/questions/58876521/how-to-install-chrome-inside-aws-lambda
+2. https://www.npmjs.com/package/chrome-aws-lambda
+
+```bash
+npm i chrome-aws-lambda --workspace packages/application
+```
+
+ensure the right version of puppeteer is installed
+
+... an older `mermaid.cli` package used a very old `1.20.*` version of puppeteer,
+which didn't have `replaceAll` defined.
+
+686378 (78.0.3882.0) https://chromium.googlesource.com/chromium/src/+/19d4547535ab5aba70b4730443f84e8153052174
