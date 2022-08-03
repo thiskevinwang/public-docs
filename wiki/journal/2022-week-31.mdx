@@ -1,0 +1,110 @@
+---
+name: 2022, Week 31
+description: |
+  Week 31 is from Monday, August 1, 2022 until
+  (and including) Sunday, August 7, 2022.
+---
+
+# Weekend
+
+{/* prettier-ignore */}
+<Badge size="small" type="error">Hot</Badge>
+<Badge size="small" type="success">Productive</Badge>
+<Badge size="small" type="secondary" variant="contrast">Tired</Badge>
+
+Over the past weekend, I built a fun little feature that I’m calling
+_Regeneration History_. You can see it on the right side column (desktop width only).
+
+I also watched a lot of [Big Timber] in the background, and worked on some
+CloudWatch dashboards for Lambda function metrics.
+
+See: [/wiki/cloud/aws/cloudwatch](/wiki/cloud/aws/cloudwatch)
+
+[big timber]: https://www.netflix.com/title/81349493
+
+## Regeneration History
+
+I self-host & deploy my site on AWS so I can view some additional
+bits of info that you forfeit when using a fully managed platform-as-a-service
+like Netlify or Vercel.
+
+I use [serverless-next.js] to build my site.
+This package implements Next.js’ [ISR] by storing statically generated pages
+in an S3 bucket. Anytime a page is re-generated, the S3 object
+is modified, and if you have [versioning][s3-versioning] enabled, the object
+will get a new version rather than being overwritten.
+
+[serverless-next.js]: https://github.com/serverless-nextjs/serverless-next.js
+[isr]: https://nextjs.org/docs/basic-features/data-fetching/incremental-static-regeneration
+[s3-versioning]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/Versioning.html
+
+For example, the S3 object for [/wiki/cloud/aws/s3](/wiki/cloud/aws/s3)
+will be an `.html` file, located in the bucket at this particular path:
+
+<TreeLocal
+  style={{
+    "--geist-background": "var(--accents-1)",
+    marginLeft: "var(--geist-gap)",
+  }}
+>
+  <FolderLocal name="{{BUCKET}}" defaultOpen>
+    <FolderLocal name="static-pages/" defaultOpen>
+      <FolderLocal name="GCj_xRxePC-Y5qCmHbcy9/" defaultOpen>
+        <FolderLocal name="wiki/" defaultOpen>
+          <FolderLocal name="cloud/" defaultOpen>
+            <FolderLocal name="aws/" defaultOpen>
+              <FileLocal
+                name="s3.html"
+                style={{ fontWeight: "bold", color: "var(--geist-success)" }}
+              />
+            </FolderLocal>
+          </FolderLocal>
+        </FolderLocal>
+      </FolderLocal>
+    </FolderLocal>
+  </FolderLocal>
+</TreeLocal>
+
+### S3 Object Versioning
+
+Regular traffic to a page, which implies regular static regeneration, will result
+in an object version dataset like so this...
+
+| Version ID                                           | Type | Last modified                        | Size     | Storage class |
+| :--------------------------------------------------- | :--- | :----------------------------------- | :------- | :------------ |
+| `_rI5.FdhyBN.RShARHk2LCLDTroKzelx` (Current version) | html | August 2, 2022, 17:23:09 (UTC-04:00) | 104.0 KB | Standard      |
+| `u_fU1LwVH.hnq420YSRXcRgiUxyVA1NG`                   | html | August 2, 2022, 07:08:11 (UTC-04:00) | 104.0 KB | Standard      |
+| `hauUtZRTY8t_B8MOiVR65tmYS1aHH3oM`                   | html | July 31, 2022, 15:56:05 (UTC-04:00)  | 104.0 KB | Standard      |
+| `rVYRFxKN7HLx1uo2.KEf.hVv3zRsuifo`                   | html | July 31, 2022, 00:34:25 (UTC-04:00)  | 103.7 KB | Standard      |
+| `IlKMyT27i7zGm9ozzxGdxF5Wjy_OlwAH`                   | html | July 30, 2022, 23:59:41 (UTC-04:00)  | 103.7 KB | Standard      |
+
+### Usefulness
+
+An _audit log_ or append-only-like log such is certainly useful in other
+contexts, but I don’t think there is much value in this particular case of
+a website’s static files.
+
+For fun though, in case you wanted to build some sort a time-travel
+feature (thinking about something similar to the [React.js tic-tac-toe time-travel feature][ttt]),
+you could accomplish that this mechanism... but again, not
+particularly useful.
+
+[ttt]: https://reactjs.org/tutorial/tutorial.html#adding-time-travel
+
+# Work week
+
+## Terraform Core Versioned Docs
+
+<Badge size="small">Tuesday, Aug 2, 2022</Badge>
+
+Today, I, along with my colleague Bryce, delivered _versioned docs_ for
+the **Core** dos on [terraform.io](https://terraform.io/). This includes:
+
+- https://www.terraform.io/intro
+- https://www.terraform.io/cli
+- https://www.terraform.io/language
+- https://www.terraform.io/internals
+
+While the trivial on the surface — you get a nifty little dropdown —
+the underlying architecture is massively more complex. More on that
+in a dedicated post maybe...

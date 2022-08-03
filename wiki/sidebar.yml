@@ -2,6 +2,9 @@
 - name: Overview
   href: /wiki/overview
   singleFile: true
+############
+- name: Tech
+  separator: true
 - name: Cloud
   href: /wiki/cloud/overview
   posts:
@@ -61,11 +64,24 @@
       href: /wiki/meta/sidebar
     - name: Regeneration History
       href: /wiki/meta/regeneration-history
+############
+- name: Arts
+  separator: true
+- name: Music
+  href: /wiki/music/overview
+  posts: []
+  singleFile: true
+############
 - name: Life
   separator: true
+- name: Journal
+  href: /wiki/journal/overview
+  posts:
+    - name: 2022, Week 31
+      href: /wiki/journal/2022-week-31
 - name: Hobbies
   href: /wiki/hobbies/overview
-  posts: []
+  singleFile: true
 - name: Other
   separator: true
 - name: Miscellaneous

@@ -47,3 +47,28 @@ For ISR to work, I need to do this:
 
 `import.meta.url` evaluates to a local path, that is then shipped to the
 regneration lambda function, which obviously doesn't work.
+
+Here is a `postinstall` script to handle the patching from above
+
+```bash filename="./scripts/patch-starry-night.sh"
+#!/bin/sh
+
+echo "====================="
+echo "Patching Starry Night"
+echo "====================="
+
+# A string like `Tue, 02 Aug 2022 22:10:26 +0000`
+d=$(date -jRu)
+
+file_to_patch=$(pwd)/node_modules/@wooorm/starry-night/lib/get-oniguruma.js
+
+cat <<EOF > $file_to_patch
+// This file has been patched; $d
+export async function getOniguruma() {
+  return await fetch("https://esm.sh/vscode-oniguruma@1/release/onig.wasm");
+}
+EOF
+
+# Alternatively, `cat` a file's contents over the file to be patched
+# cat $(pwd)/scripts/get-oniguruma.js > $file_to_patch
+```
