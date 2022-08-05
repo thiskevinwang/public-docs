@@ -93,12 +93,15 @@ particularly useful.
 
 # Work week
 
+## Tuesday, Aug 2, 2022
+
+{/* prettier-ignore */}
+<Badge size="small" type="success">Big Ship</Badge>
+
 ## Terraform Core Versioned Docs
 
-<Badge size="small">Tuesday, Aug 2, 2022</Badge>
-
 Today, I, along with my colleague Bryce, delivered _versioned docs_ for
-the **Core** dos on [terraform.io](https://terraform.io/). This includes:
+the **Core** docs on [terraform.io](https://terraform.io/). This includes:
 
 - https://www.terraform.io/intro
 - https://www.terraform.io/cli
@@ -109,8 +112,171 @@ While the trivial on the surface — you get a nifty little dropdown —
 the underlying architecture is massively more complex. More on that
 in a dedicated post maybe...
 
-<Badge size="small">Wednesday, Aug 3, 2022</Badge>
+## Wednesday, Aug 3, 2022
+
+Automated GitHub Releases
 
 - https://github.com/hashicorp/terraform-docs-agents/pull/12
-- https://github.com/hashicorp/dev-portal/pull/760
-- https://github.com/hashicorp/react-components/pull/668
+
+## Mermaid Rabbit Hole & GitHub GraphQL API Rate Limit
+
+{/* prettier-ignore */}
+<Badge size="small" type="warning" variant="contrast">Poor choices</Badge>
+
+After work, I went into one of the worst rabbit holes in recent
+times.
+
+**The Problem**: I had an initial implementation of `mermaid` diagrams
+being rendered in MDX. However, these diagrams would render at build time
+only, which takes place on my machine. Subsequent builds that would take
+place on AWS Lambda in a _regeneration lambda_, during ISR would fail
+with an difficult to diagnose error like:
+
+> \_projectRoot is undefined. Unable to create a BrowserFetcher.
+
+This lead me to use https://github.com/alixaxel/chrome-aws-lambda.
+
+However this ended up resulting in file trace issues that were caused
+by some incompatibility with the `target: "serverless"` config that
+`serverless-next.js` sets.
+
+...The ugly part...
+
+Throughout this process, I had built my site several times. My site
+makes calls to the GitHub GraphQL API for data to statically render
+pages — mostly the pages on this [`wiki`](/wiki/overview) portion of the
+site. I hadn’t yet optimized these calls, but I quickly realized that
+I was exceeding the 5000 req/hr rate limit.
+
+I continuously monitored my usage at https://docs.github.com/en/graphql/overview/explorer
+and continued debugging two issues simultaneously — `mermaid`/`puppeteer`/`chromium`, and
+excessive API calls to the GitHub API.
+
+I needed to replace my troublesome code, which was already deployed on
+AWS, with a new deployment **but** the static page generation during the
+build process was blocked my GitHub API rate limit.
+
+Both the deployed code and local build attempts were simultaneously
+exacerbating the rate limit.
+
+_Oh lord..._
+
+GitHub resets your rate limit every hour, so I stayed up throughout 3 of
+these hour windows... from roughly 1:30AM to 4:30AM. In the first two
+windows, I had failed to find/solve the culprit, and rate limit was reached
+within minutes. I eventualy optimized and deleted some repeat API calls,
+and delete other unecessary ones.
+
+Here's one for fetching all the files in a tree shape. I deleted this.
+
+```graphql
+fragment treeEntryFields on TreeEntry {
+  oid
+  name
+  type
+}
+
+query GetFileTree($owner: String!, $name: String!, $expression: String!) {
+  rateLimit {
+    cost
+    remaining
+    used
+  }
+  repository(owner: $owner, name: $name) {
+    name
+    object(expression: $expression) {
+      ... on Tree {
+        entries {
+          ...treeEntryFields
+          name
+          object {
+            ... on Tree {
+              entries {
+                ...treeEntryFields
+                name
+                object {
+                  ... on Tree {
+                    entries {
+                      ...treeEntryFields
+                      name
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+### Logical Nullish Assignment `(??=)`
+
+One takeaway and learning was this [logical nullish assigment](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_nullish_assignment)
+operator.
+
+In this bare bones example, `fetch` only gets called once, despite the
+wrapping `callApi` function being called three times.
+
+```typescript filename="crude cache example"
+let cache: Record<string, any> = {};
+
+async function callApi(key) {
+  cache[key] ??= await fetch(key);
+}
+
+await callApi("foo");
+await callApi("foo");
+await callApi("foo");
+```
+
+I eventually optimized a few repeat API calls, resolved my rate limit nightmare,
+never ended up getting Mermaid diagrams to render on Lambda, and eventually
+went to bed.
+
+Awful life decision of staying up.
+
+## Todo
+
+{/* this span is here to help color the invisible checkmark inside the checkbox */}
+
+<span style={{ "--geist-background": "var(--accents-1)" }}>
+  - [ ] Use a different GitHub account's PAT for API calls.
+</span>
+
+## Thursday, Aug 4, 2022
+
+<Badge size="small">Dead</Badge>
+
+I basically felt like garbage all day, and was hit by back to back Vercel gotchas
+at work.
+
+## Next.js && Nested Middleware incompatibility
+
+```bash
+# Error: Builder returned invalid routes: ["Route at index 25 has invalid `src` regular expression \"^(/_next/data/W1kPu1ISmrdZOGFG4eV3j)?((?:^/docs(?:(/.*)?)(\\.json)?$)$\"."]
+```
+
+From JJ Kasper:
+
+> There should be a build error if nested middleware is used past 12.1.7-canary.9
+
+## Nix Shell + Mermaid CLI
+
+`mmdc` is the CLI command for the Mermaid CLI.
+
+```bash
+nix-shell -p nodePackages.mermaid-cli
+
+# [nix-shell:~/repos/public-docs]
+
+cat <<EOF | mmdc -o test.svg
+graph LR
+    A-->B
+    B-->C
+    C-->D
+    C-->F
+EOF
+```
