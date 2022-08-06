@@ -5,6 +5,11 @@
 ############
 - name: Tech
   separator: true
+- name: Terminal
+  href: /wiki/terminal/overview
+  posts:
+    - name: JSON & YAML Wrangling
+      href: /wiki/terminal/json-yaml-wrangling
 - name: Cloud
   href: /wiki/cloud/overview
   posts:

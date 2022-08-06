@@ -1,0 +1,88 @@
+---
+name: JSON & YAML Wranglin'
+description: |
+  jq, yq, flat, etc.
+---
+
+> **Warning**: This section is under construction
+
+# Tools
+
+- `jq` - https://stedolan.github.io/jq/
+- `yq` - https://github.com/mikefarah/yq
+  - https://github.com/NixOS/nixpkgs/tree/master/pkgs/development/tools/yq-go
+- `flat` - https://github.com/hughsk/flat
+
+Install all three with `nix`
+
+```bash
+nix-shell -p nodePackages.npm jq yq-go
+```
+
+# Examples
+
+```bash
+# process file contents
+cat ./wiki/sidebar.yml | yq -o json | npx flat
+```
+
+```bash
+# process multiline input
+cat <<EOF | yq -o json | npx flat
+- name: Cloud
+  href: /wiki/cloud/overview
+  posts:
+    - name: Amazon Web Services (AWS)
+      href: /wiki/cloud/aws/overview
+      posts:
+        - name: CloudWatch
+          href: /wiki/cloud/aws/cloudwatch
+        - name: S3
+          href: /wiki/cloud/aws/s3
+EOF
+```
+
+Output:
+
+```json
+{
+  "0.name": "Cloud",
+  "0.href": "/wiki/cloud/overview",
+  "0.posts.0.name": "Amazon Web Services (AWS)",
+  "0.posts.0.href": "/wiki/cloud/aws/overview",
+  "0.posts.0.posts.0.name": "CloudWatch",
+  "0.posts.0.posts.0.href": "/wiki/cloud/aws/cloudwatch",
+  "0.posts.0.posts.1.name": "S3",
+  "0.posts.0.posts.1.href": "/wiki/cloud/aws/s3"
+}
+```
+
+Find all hrefs
+
+jq -r 'to_entries | map(select(.key | match("(path|href)$";"i"))) | map(.value)'
+
+```bash
+cat <<EOF | yq -o json | npx flat | jq -r 'to_entries | map(select(.key | match("(href)$";"i"))) | map(.value)'
+- name: Cloud
+  href: /wiki/cloud/overview
+  posts:
+    - name: Amazon Web Services (AWS)
+      href: /wiki/cloud/aws/overview
+      posts:
+        - name: CloudWatch
+          href: /wiki/cloud/aws/cloudwatch
+        - name: S3
+          href: /wiki/cloud/aws/s3
+EOF
+```
+
+Output
+
+```json
+[
+  "/wiki/cloud/overview",
+  "/wiki/cloud/aws/overview",
+  "/wiki/cloud/aws/cloudwatch",
+  "/wiki/cloud/aws/s3"
+]
+```
