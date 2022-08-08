@@ -1,0 +1,28 @@
+---
+name: Embed
+description: https://pkg.go.dev/embed
+---
+
+> **Warning**: This section is under construction
+
+{/* Note to contributor: this document uses MDXv2 */}
+
+{/* HTML comments (<!-- foo -->) will not work out of the box Use JavaScript comments like this. */}
+
+{/* Be wary of autoformatters like prettier, which may cause unintended line breaks to be added. To avoid this, you can add a comment with `prettier-ignore`. */}
+
+# How to embed static files with a `go` binary
+
+Import `embed`. The underscore will prevent potential
+autoformatting from removing the immport.
+
+Then use the `go:embed` directive.
+
+```go
+import (
+	_ "embed"
+)
+
+//go:embed templates/wiki-template.mdx.tmpl
+var templateFileContents string
+```

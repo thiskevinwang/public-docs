@@ -1,5 +1,39 @@
 ---
 name: Go
+description: https://go.dev/
 ---
 
 > **Warning**: This section is under construction
+
+# How to create a file if its directories don't exist
+
+Assume a bare file structure like the following, and I want
+to create a file like `./foo/bar/baz.txt`:
+
+<Container style={{ marginLeft: "var(--geist-gap)" }}>
+  <TreeLocal style={{ "--geist-background": "var(--accents-1)" }}>
+    <FolderLocal name="." defaultOpen>
+      <FileLocal name="main.go" />
+    </FolderLocal>
+  </TreeLocal>
+</Container>
+
+```go
+import (
+  "log"
+  "os"
+	"path/filepath"
+)
+
+func main() {
+	file := "foo/bar/baz.txt"
+
+	parentDir := filepath.Dir(file)
+	if _, err := os.Stat(parentDir); errors.Is(err, os.ErrNotExist) {
+		err := os.MkdirAll(parentDir, os.ModePerm)
+		if err != nil {
+			log.Println(err)
+		}
+	}
+}
+```
