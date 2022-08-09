@@ -59,9 +59,15 @@
 - name: Go
   href: /wiki/go/overview
   posts:
+    - name: Embed
+      href: /wiki/go/embed
     - name: Template
       href: /wiki/go/template
-      singleFile: true
+- name: JavaScript
+  href: /wiki/javascript/overview
+  posts:
+    - name: Regex
+      href: /wiki/javascript/regex
 - name: Meta
   href: /wiki/meta/website
   posts:
@@ -84,6 +90,8 @@
   posts:
     - name: 2022, Week 31
       href: /wiki/journal/2022-week-31
+    - name: 2022, Week 32
+      href: /wiki/journal/2022-week-32
 - name: Hobbies
   href: /wiki/hobbies/overview
   singleFile: true
