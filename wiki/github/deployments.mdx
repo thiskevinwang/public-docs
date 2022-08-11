@@ -1,0 +1,196 @@
+---
+name: GitHub Deployments
+description: No description specified
+---
+
+> **Warning**: This section is under construction
+
+Every `gh` CLI command below will rely on a few variables being set. Additionally,
+every command has a `curl` alternative. In my opinion, the `curl` alternative
+is a lot more cumbersome as you need to pass an `Authorization` header each time.
+
+```bash
+OWNER=thiskevinwang
+REPO=workflows-test
+```
+
+# List deployments
+
+https://docs.github.com/en/rest/deployments/deployments#list-deployments
+
+```bash
+gh api /repos/$OWNER/$REPO/deployments
+```
+
+# Create a Deployment
+
+https://docs.github.com/en/rest/deployments/deployments#create-a-deployment
+
+```bash
+res=$(gh api \
+  --method POST \
+  /repos/$OWNER/$REPO/deployments \
+  -f ref='topic' \
+  -f payload='{ "deploy": "migrate" }' \
+  -f description='Deploy request from hubot')
+echo $? # 0 if success
+        # 1 if failure
+echo $res
+```
+
+## Failures
+
+### If the `ref` doesn't exist:
+
+```json
+{
+  "message": "No ref found for: topic-branch",
+  "documentation_url": "https://docs.github.com/rest/reference/repos#create-a-deployment"
+}
+```
+
+### If any commit status checks failed...
+
+```json
+{
+  "message": "Conflict: Commit status checks failed for main.",
+  "errors": [
+    {
+      "contexts": [
+        {
+          "context": "print_progress",
+          "state": "failure"
+        },
+        {
+          "context": "PR ${{ github.event.number }} was merged",
+          "state": "skipped"
+        }
+      ],
+      "resource": "Deployment",
+      "field": "required_contexts",
+      "code": "invalid"
+    }
+  ],
+  "documentation_url": "https://docs.github.com/rest/reference/repos#create-a-deployment"
+}
+```
+
+#### Resolving
+
+```bash
+git commit -m "[skip ci] empty commit with no status checks" --allow-empty
+```
+
+## Success
+
+```json showLinenumbers {3}
+{
+  "url": "https://api.github.com/repos/thiskevinwang/workflows-test/deployments/624027264",
+  "id": 624027264,
+  "node_id": "DE_kwDOGWPYSs4lMeaA",
+  "task": "deploy",
+  "original_environment": "production",
+  "environment": "production",
+  "description": "Deploy request from hubot",
+  "created_at": "2022-08-10T23:33:49Z",
+  "updated_at": "2022-08-10T23:33:49Z",
+  "statuses_url": "https://api.github.com/repos/thiskevinwang/workflows-test/deployments/624027264/statuses",
+  "repository_url": "https://api.github.com/repos/thiskevinwang/workflows-test",
+  "creator": {
+    "login": "thiskevinwang",
+    "id": 26389321,
+    "node_id": "MDQ6VXNlcjI2Mzg5MzIx",
+    "avatar_url": "https://avatars.githubusercontent.com/u/26389321?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/thiskevinwang",
+    "html_url": "https://github.com/thiskevinwang",
+    "followers_url": "https://api.github.com/users/thiskevinwang/followers",
+    "following_url": "https://api.github.com/users/thiskevinwang/following{/other_user}",
+    "gists_url": "https://api.github.com/users/thiskevinwang/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/thiskevinwang/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/thiskevinwang/subscriptions",
+    "organizations_url": "https://api.github.com/users/thiskevinwang/orgs",
+    "repos_url": "https://api.github.com/users/thiskevinwang/repos",
+    "events_url": "https://api.github.com/users/thiskevinwang/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/thiskevinwang/received_events",
+    "type": "User",
+    "site_admin": false
+  },
+  "sha": "f7a9870dc162056986a3b3708d04656853dec99a",
+  "ref": "main",
+  "payload": "{ \"deploy\": \"migrate\" }",
+  "transient_environment": false,
+  "production_environment": false,
+  "performed_via_github_app": null
+}
+```
+
+![Deployments History](/deployments-history-1.webp)
+
+# Deployment Statuses
+
+## List deployment statuses
+
+https://docs.github.com/en/rest/deployments/statuses
+
+```bash
+DEPLOYMENT_ID=$(echo $res | jq -r '.id')
+echo $DEPLOYMENT_ID
+
+gh api /repos/$OWNER/$REPO/deployments/$DEPLOYMENT_ID/statuses
+```
+
+> **Note**: This will likely be empty until a deployment status has been created.
+
+## Create a deployment status
+
+https://docs.github.com/en/rest/deployments/statuses#create-a-deployment-status
+
+```bash
+ENV=foobar
+STATE=success
+
+gh api \
+  --method POST \
+  /repos/$OWNER/$REPO/deployments/$DEPLOYMENT_ID/statuses \
+  -f environment=$ENV \
+  -f state=$STATE \
+  -f description='Deployment finished successfully.' \
+  -f log_url='https://thekevinwang.com/wiki/overview' \'
+```
+
+1 deployment's environment can be flipped to _whatever_.
+
+You’ll get an audit log of changes at when you [list deployment statuses](#list-deployment-statuses)
+
+---
+
+`state` can be one of: `error`, `failure`, `inactive`, `in_progress`, `queued`, `pending`, `success`
+The state of the status. When you set a transient deployment to inactive, the deployment will be shown as destroyed in GitHub.
+
+---
+
+When creating a `success` state, you'll see an entry like
+
+> `f7a9870` was [deployed](#) by <Avatar size={22} src="/image/kevin.webp"/> [**thiskevinwang**](#) 2 hours ago <Badge style={{color:"#3fb950",background:"transparent",borderColor:"#3fb950"}}>Active</Badge>
+
+- `deployed`: the value that was passed into `log_url`. If no `log_url` was passed, the UI will not
+  render a link.
+
+# Use cases?
+
+With GitHub actions
+
+https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#deployment
+
+```yml
+on: deployment
+```
+
+https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#deployment_status
+
+```yml
+on: deployment_status
+```
+
+You could run a GitHub action when a 3rd party platform like Vercel, Netlify, or Heroku

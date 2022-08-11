@@ -1,0 +1,26 @@
+---
+name: Git Overview
+description: No description specified
+---
+
+> **Warning**: This section is under construction
+
+# Misc commands
+
+Answering some questions with `git` commands...
+
+## Getting common ancestor of two refs
+
+```bash
+git merge-base main ptfe-releases/v202208
+```
+
+> **Note**: If the branches have been merged, the squash/merge commit will be returned.
+
+## Get all changed files between two refs
+
+```bash
+git diff --name-only main ptfe-releases/v202208
+# or
+git diff --stat main ptfe-releases/v202208
+```

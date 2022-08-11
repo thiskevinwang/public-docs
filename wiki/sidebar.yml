@@ -52,10 +52,12 @@
           href: /wiki/github/api/rest
     - name: Actions
       href: /wiki/github/actions/overview
-      singleFile: true
     - name: Releases
       href: /wiki/github/releases/overview
-      singleFile: true
+    - name: Webhook Events
+      href: /wiki/github/webhook-events
+    - name: Deployments
+      href: /wiki/github/deployments
 - name: Go
   href: /wiki/go/overview
   posts:
