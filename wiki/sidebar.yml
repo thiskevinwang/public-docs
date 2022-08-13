@@ -35,6 +35,9 @@
           href: /wiki/databases/postgres/management
         - name: Queries
           href: /wiki/databases/postgres/queries
+- name: Design Patterns
+  href: /wiki/design-patterns/overview
+  singleFile: true
 - name: Docker
   href: /wiki/docker/overview
   posts:
