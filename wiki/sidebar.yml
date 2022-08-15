@@ -22,6 +22,9 @@
           href: /wiki/cloud/aws/s3
     - name: Google Cloud Platform (GCP)
       href: /wiki/cloud/gcp
+- name: Kubernetes
+  href: /wiki/kubernetes/overview
+  singleFile: true
 - name: Databases
   href: /wiki/databases/overview
   posts:
