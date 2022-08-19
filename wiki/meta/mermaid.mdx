@@ -1,0 +1,117 @@
+---
+name: Mermaid.js
+description: The tool that powers the diagrams on this wiki
+---
+
+> **Warning**: This section is under construction
+
+# Overview
+
+For this site, I author everything in MDX. Diagrams are written as regular
+fenced codeblocks, with `mermaid` as the language.
+
+````markdown
+```mermaid
+%% A basic example
+graph LR
+  A --> B
+```
+````
+
+The code blocks are rendered as is, and a **client-side request** is made
+to `mermaid.thekevinwang.com` with the diagram payload.
+
+The server returns a SVG image:
+
+```mermaid
+%% A basic example
+graph LR
+    A --> B
+```
+
+## Implementation
+
+Behind this, there is a Lambda function, running a Docker container. Here is
+an overview of the Dockerfile.
+
+```mermaid
+%% Dockerfile
+stateDiagram-v2
+    Dockerfile --> NODE_DEPS
+    Dockerfile --> GO_BUILDER
+    NODE_DEPS --> RUNNER : node_modules
+    GO_BUILDER --> RUNNER : binary executable
+
+    note left of NODE_DEPS
+        This contains the Mermaid CLI node binary
+    end note
+    state NODE_DEPS {
+        [*] --> copy_node_files : ENV PUPPETEER_SKIP_DOWNLOAD=1
+        copy_node_files --> npm_install
+        npm_install --> [*]
+    }
+
+    note left of GO_BUILDER
+        This is a basic http server
+    end note
+    state GO_BUILDER {
+        [*] --> copy_go_files
+        copy_go_files --> go_build
+        go_build --> [*]
+    }
+
+    state RUNNER {
+        [*] --> apk_add_chromium:  ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+        apk_add_chromium --> copy_puppeteer_config
+        copy_puppeteer_config --> copy_node_deps
+        copy_node_deps --> copy_go_executable
+        copy_go_executable --> copy_lambda_adapter_extension
+        copy_lambda_adapter_extension --> CMD
+    }
+```
+
+This builds an OCI image, which is hosted on AWS ECR. When Lambda uses this
+to run a container, it internally runs a compiled http server, and uses the
+Mermaid CLI binary to process incoming diagram text. It retuns a simple SVG
+string.
+
+The end to end flow looks like this
+
+```mermaid
+sequenceDiagram
+    participant CL as Client
+    participant CF as CloudFront
+    participant AGW as API Gateway
+    participant LM as Lambda
+
+    CL->>CF: GET
+    activate CF
+    alt Cache Hit
+        CF->>CL: Cached Response
+    else Cache Miss
+        CF->>+AGW: Origin Request
+        AGW->>+LM: Proxy Integration
+        LM->>-AGW: (Content-Type: text/plain)
+        AGW->>-CF: Origin Response
+        CF->>CL: (Content-Type: image/svg+xml)
+    end
+    deactivate CF
+```
+
+## Rationale
+
+The same client-side request to generate a mermaid diagram could occur
+server-side, but I simply have it client-side because I want to be
+able to request an updated diagram SVG, in response to changes in the
+client’s `mode` value (dark/default).
+
+## Appendix
+
+Here are some syntax cheatsheets I found to be helpful:
+
+- [General](https://jojozhuang.github.io/tutorial/mermaid-cheat-sheet/) (doesn’t have state diagram snippets though)
+- [One with `stateDiagram`](https://coda.io/@leandro-zubrezki/diagrams-and-visualizations-using-mermaid/state-diagram-6)
+
+And of course, the Mermaid live playground
+
+- https://mermaid.live/

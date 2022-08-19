@@ -20,8 +20,8 @@ to create a file like `./foo/bar/baz.txt`:
 
 ```go
 import (
-  "log"
-  "os"
+	"log"
+	"os"
 	"path/filepath"
 )
 
@@ -35,5 +35,35 @@ func main() {
 			log.Println(err)
 		}
 	}
+}
+```
+
+# Slice Stuff
+
+```go filename="https://go.dev/play/p/U85ZMhz3hCA" showLineNumbers=false
+// You can edit this code!
+// Click here and start typing.
+package main
+
+import "fmt"
+
+type Node struct {
+	Value string
+}
+
+func main() {
+	n1 := Node{"1"}
+	n2 := Node{"2"}
+	edges := make(map[Node][]*Node)
+	fmt.Println(fmt.Sprintf("%+v", edges))
+
+	edges[n1] = []*Node{&n2}
+	edges[n2] = make([]*Node, 0)
+
+	fmt.Println(fmt.Sprintf("%+v", edges[n1]))
+	fmt.Println(fmt.Sprintf("%+v", edges[n2]))
+
+	fmt.Println("---")
+	fmt.Println(fmt.Sprintf("%+v", edges))
 }
 ```

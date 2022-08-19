@@ -79,13 +79,6 @@
 - name: Talks
   href: /wiki/talks/overview
   singleFile: true
-- name: Meta
-  href: /wiki/meta/website
-  posts:
-    - name: Sidebar
-      href: /wiki/meta/sidebar
-    - name: Regeneration History
-      href: /wiki/meta/regeneration-history
 ############
 - name: Arts
   separator: true
@@ -114,3 +107,12 @@
 - name: Scribbles
   href: /wiki/scribbles
   singleFile: true
+- name: Meta
+  href: /wiki/meta/website
+  posts:
+    - name: Sidebar
+      href: /wiki/meta/sidebar
+    - name: Mermaid
+      href: /wiki/meta/mermaid
+    - name: Regeneration History
+      href: /wiki/meta/regeneration-history
