@@ -105,6 +105,26 @@ server-side, but I simply have it client-side because I want to be
 able to request an updated diagram SVG, in response to changes in the
 client’s `mode` value (dark/default).
 
+### `Content-Type`
+
+I’ve run into some issues with the `Content-Type` header. If I set it
+to the _correct_ value — `image/svg+xml` — in Lambda container code,
+it either gets automatically base64-encoded by API Gateway, or I get
+an XML error.
+
+```markdown
+This page contains the following errors:
+error on line 1 at column 1: Document is empty
+Below is a rendering of the page up to the first error.
+```
+
+However, if I call the lambda function's URL directly, it _just works_,
+but I don’t get any flexiblity of CDN edge caching, or adding
+a fully qualified domain name.
+
+So, my fix was to use edge compute (CloudFront functions) to
+modify the `Content-Type` header accordingly. 🧠
+
 ## Appendix
 
 Here are some syntax cheatsheets I found to be helpful:
