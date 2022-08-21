@@ -91,6 +91,7 @@ sequenceDiagram
     else Cache Miss
         CF->>+AGW: Origin Request
         AGW->>+LM: Proxy Integration
+        Note over LM: Run Container via ECR image
         LM->>-AGW: (Content-Type: text/plain)
         AGW->>-CF: Origin Response
         CF->>CL: (Content-Type: image/svg+xml)
