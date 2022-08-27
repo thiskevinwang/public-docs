@@ -4,23 +4,3 @@ description: Dump of dumps
 ---
 
 > **Warning**: This section is under construction
-
-# Nix Shell
-
-```bash
-nix-shell -p libuuid
-
-# [nix-shell:~/repos/thekevinwang.com]$
-```
-
-```bash
-uuidgen | tr [:upper:] [:lower:]
-
-# ...some uuid
-```
-
-> **Warning**: You need quotes (`'`) if using `zsh`: https://stackoverflow.com/questions/62266314/zsh-no-matches-found-space
->
-> ```bash
-> uuidgen | tr '[:upper:]' '[:lower:]'
-> ```
