@@ -41,29 +41,29 @@ will get a new version rather than being overwritten.
 For example, the S3 object for [/wiki/cloud/aws/s3](/wiki/cloud/aws/s3)
 will be an `.html` file, located in the bucket at this particular path:
 
-<TreeLocal
+<Tree
   style={{
     "--geist-background": "var(--accents-1)",
     marginLeft: "var(--geist-gap)",
   }}
 >
-  <FolderLocal name="{{BUCKET}}" defaultOpen>
-    <FolderLocal name="static-pages/" defaultOpen>
-      <FolderLocal name="GCj_xRxePC-Y5qCmHbcy9/" defaultOpen>
-        <FolderLocal name="wiki/" defaultOpen>
-          <FolderLocal name="cloud/" defaultOpen>
-            <FolderLocal name="aws/" defaultOpen>
-              <FileLocal
+  <Folder name="{{BUCKET}}" defaultOpen>
+    <Folder name="static-pages/" defaultOpen>
+      <Folder name="GCj_xRxePC-Y5qCmHbcy9/" defaultOpen>
+        <Folder name="wiki/" defaultOpen>
+          <Folder name="cloud/" defaultOpen>
+            <Folder name="aws/" defaultOpen>
+              <File
                 name="s3.html"
                 style={{ fontWeight: "bold", color: "var(--geist-success)" }}
               />
-            </FolderLocal>
-          </FolderLocal>
-        </FolderLocal>
-      </FolderLocal>
-    </FolderLocal>
-  </FolderLocal>
-</TreeLocal>
+            </Folder>
+          </Folder>
+        </Folder>
+      </Folder>
+    </Folder>
+  </Folder>
+</Tree>
 
 ### S3 Object Versioning
 
@@ -156,7 +156,7 @@ I needed to replace my troublesome code, which was already deployed on
 AWS, with a new deployment **but** the static page generation during the
 build process was blocked my GitHub API rate limit.
 
-Both the deployed code and local build attempts were simultaneously
+Both the deployed code and build attempts were simultaneously
 exacerbating the rate limit.
 
 _Oh lord..._

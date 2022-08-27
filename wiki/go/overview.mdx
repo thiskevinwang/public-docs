@@ -11,11 +11,11 @@ Assume a bare file structure like the following, and I want
 to create a file like `./foo/bar/baz.txt`:
 
 <Container style={{ marginLeft: "var(--geist-gap)" }}>
-  <TreeLocal style={{ "--geist-background": "var(--accents-1)" }}>
-    <FolderLocal name="." defaultOpen>
-      <FileLocal name="main.go" />
-    </FolderLocal>
-  </TreeLocal>
+  <Tree style={{ "--geist-background": "var(--accents-1)" }}>
+    <Folder name="." defaultOpen>
+      <File name="main.go" />
+    </Folder>
+  </Tree>
 </Container>
 
 ```go
