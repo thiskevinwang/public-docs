@@ -24,7 +24,12 @@
       href: /wiki/cloud/gcp
 - name: Kubernetes
   href: /wiki/kubernetes/overview
-  singleFile: true
+  posts:
+    - name: Helm
+      href: /wiki/kubernetes/helm/overview
+      posts:
+        - name: Redis
+          href: /wiki/kubernetes/helm/redis
 - name: Databases
   href: /wiki/databases/overview
   posts:
