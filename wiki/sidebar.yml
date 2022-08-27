@@ -79,6 +79,11 @@
       href: /wiki/go/embed
     - name: Template
       href: /wiki/go/template
+- name: Terraform
+  href: /wiki/terraform/overview
+  posts:
+    - name: GitHub Provider
+      href: /wiki/terraform/github
 - name: JavaScript
   href: /wiki/javascript/overview
   posts:

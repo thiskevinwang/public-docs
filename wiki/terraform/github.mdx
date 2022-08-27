@@ -1,0 +1,64 @@
+---
+name: GitHub Provider
+---
+
+> **Warning**: This section is under construction
+
+# Importing GitHub Repository
+
+The `github_repository` resource will always attempt to create
+a repository **if** it isn't managed by Terraform state.
+
+```bash
+Error: POST https://api.github.com/user/repos: 422 Repository creation failed.
+[{Resource:Repository Field:name Code:custom Message:name already exists on this account}]
+```
+
+`import`-ing the repository is the way to go. But depending on where
+the resource is defined, the `import` path may be different.
+
+## Root level
+
+> **Note**
+>
+> This assumes a repository named `workflows-test`, and resource id of `my_id`.
+
+<Container style={{ marginLeft: "var(--geist-gap)" }}>
+  <Tree defaultOpen>
+    <Folder name="terraform" defaultOpen>
+      <File name="main.tf" />
+      <File name="resources.tf" />
+    </Folder>
+  </Tree>
+</Container>
+
+```bash
+terraform import github_repository.my_id workflows-test
+```
+
+## Module level
+
+> **Note**
+>
+> This assumes a repository named `workflows-test`, a module named `my-module`
+> with a module id `workflows-test`, and resource id of `my_id`.
+
+<Container style={{ marginLeft: "var(--geist-gap)" }}>
+  <Tree defaultOpen>
+    <Folder name="terraform" defaultOpen>
+      <File name="main.tf" />
+      <Folder name="module" defaultOpen>
+        <File name="resources.tf" />
+      </Folder>
+    </Folder>
+  </Tree>
+</Container>
+
+```bash
+TF_LOG=TRACE terraform import 'module.my-module["workflows-test"].github_repository.my_id' "workflows-test"
+```
+
+> **Warning**: Take note that `terraform` sometimes requires keys to be
+> wrapped in square brackets (`[`)... and `ZSH` treats square brackets
+> as special characters. These will need to be escaped, or the entire
+> string needs to be wrapped in single quotes.

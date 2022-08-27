@@ -22,33 +22,33 @@ aws s3 ls s3://${BUCKET} --recursive
 
 Given I have a bucket like:
 
-<TreeLocal style={{ "--geist-background": "var(--accents-1)" }}>
-  <FolderLocal name="{{BUCKET}}" defaultOpen>
-    <FolderLocal name="_next/" defaultOpen></FolderLocal>
-    <FolderLocal name="/" defaultOpen>
-      <FolderLocal name="BUILD_ID/" defaultOpen>
-        <FileLocal name="BUILD_ID" />
-      </FolderLocal>
-    </FolderLocal>
-    <FolderLocal name="public/" defaultOpen></FolderLocal>
-    <FolderLocal name="static-pages/" defaultOpen>
-      <FolderLocal
+<Tree style={{ "--geist-background": "var(--accents-1)" }}>
+  <Folder name="{{BUCKET}}" defaultOpen>
+    <Folder name="_next/" defaultOpen></Folder>
+    <Folder name="/" defaultOpen>
+      <Folder name="BUILD_ID/" defaultOpen>
+        <File name="BUILD_ID" />
+      </Folder>
+    </Folder>
+    <Folder name="public/" defaultOpen></Folder>
+    <Folder name="static-pages/" defaultOpen>
+      <Folder
         name="{{BUILD_ID}}/"
         defaultOpen
         style={{ color: "var(--geist-selection)" }}
       >
-        <FileLocal name="index.html" />
-        <FolderLocal name="wiki/" defaultOpen>
-          <FolderLocal name="github/" defaultOpen>
-            <FolderLocal name="api/" defaultOpen>
-              <FileLocal name="overview.html" />
-            </FolderLocal>
-          </FolderLocal>
-        </FolderLocal>
-      </FolderLocal>
-    </FolderLocal>
-  </FolderLocal>
-</TreeLocal>
+        <File name="index.html" />
+        <Folder name="wiki/" defaultOpen>
+          <Folder name="github/" defaultOpen>
+            <Folder name="api/" defaultOpen>
+              <File name="overview.html" />
+            </Folder>
+          </Folder>
+        </Folder>
+      </Folder>
+    </Folder>
+  </Folder>
+</Tree>
 
 `{{BUILD_ID}}` is a dynamic value
 
