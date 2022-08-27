@@ -86,3 +86,18 @@ Output
   "/wiki/cloud/aws/s3"
 ]
 ```
+
+## Get last CloudFront distribution
+
+```bash
+aws cloudfront list-distributions | jq ".DistributionList.Items | last"
+```
+
+Incase you don’t know the keys that are available **and** your output gets
+truncated by your terminal, you can use `keys` to debug.
+
+```bash
+aws cloudfront list-distributions | jq "keys"
+aws cloudfront list-distributions | jq ".DistributionList | keys"
+# etc.
+```
