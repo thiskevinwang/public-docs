@@ -1,0 +1,42 @@
+# Examples
+
+```bash
+nix-shell -p terraform
+```
+
+```bash
+nix-shell -p libuuid
+
+# [nix-shell:~/repos/thekevinwang.com]$
+```
+
+```bash
+uuidgen | tr [:upper:] [:lower:]
+
+# ...some uuid
+```
+
+> **Warning**: You need quotes (`'`) if using `zsh`: https://stackoverflow.com/questions/62266314/zsh-no-matches-found-space
+>
+> ```bash
+> uuidgen | tr '[:upper:]' '[:lower:]'
+> ```
+
+## Python
+
+https://nixos.wiki/wiki/Python
+
+https://python.on-nix.com/projects/django-3.2.7-python37/
+
+```bash
+nix-shell -p 'python38.withPackages (packages: [ packages.django ])'
+NIXPKGS_ALLOW_BROKEN=1 nix-shell -p 'python38.withPackages (packages: [ packages.magic-wormhole ])'
+```
+
+## Node
+
+https://nixos.wiki/wiki/Node.js
+
+```bash
+nix-shell -p nodePackages.mermaid-cli
+```

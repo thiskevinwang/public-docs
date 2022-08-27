@@ -10,6 +10,9 @@
   posts:
     - name: JSON & YAML Wrangling
       href: /wiki/terminal/json-yaml-wrangling
+- name: Nix Shell
+  href: /wiki/nix-shell/overview
+  singleFile: true
 - name: Cloud
   href: /wiki/cloud/overview
   posts:
