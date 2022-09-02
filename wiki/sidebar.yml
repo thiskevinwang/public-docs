@@ -19,6 +19,11 @@
     - name: Amazon Web Services (AWS)
       href: /wiki/cloud/aws/overview
       posts:
+        - name: EC2
+          href: /wiki/cloud/aws/ec2/overview
+          posts:
+            - name: VM Setup
+              href: /wiki/cloud/aws/ec2/vm-setup
         - name: CloudWatch
           href: /wiki/cloud/aws/cloudwatch
         - name: S3
@@ -54,6 +59,8 @@
   posts:
     - name: Auth
       href: /wiki/docker/auth
+- name: Git
+  href: /wiki/git/overview
 - name: GitHub
   href: /wiki/github/overview
   posts:
@@ -84,6 +91,11 @@
   posts:
     - name: GitHub Provider
       href: /wiki/terraform/github
+- name: Waypoint
+  href: /wiki/waypoint/overview
+  posts:
+    - name: Waypoint on K8s
+      href: /wiki/waypoint/k8s
 - name: JavaScript
   href: /wiki/javascript/overview
   posts:

@@ -63,7 +63,7 @@ function getPathsFromMdx() {
 }
 
 /**
- * npx chokidar-cli . -c "npx ts-node scripts/flat.ts"
+ * npx chokidar-cli . -c "npx ts-node scripts/yml-mdx.ts"
  */
 async function main() {
   event("gathering paths in /wiki/sidebar.yml");
