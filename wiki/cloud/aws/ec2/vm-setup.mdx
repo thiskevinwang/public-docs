@@ -1,0 +1,75 @@
+---
+name: Virtual Machine Setup
+description: |
+  Docker? Nix? Chonky deps? ... Yum? APK? Apt-get? Madness...
+---
+
+> **Warning**: This section is under construction
+
+All the following command snippets are meant to be run from within
+an EC2 instance.
+
+# Which distribution
+
+Knowing which distribution is being run is pretty important, as well
+as knowing which package manager is being used.
+
+```bash
+cat /etc/os-release
+
+# NAME="Amazon Linux"
+# VERSION="2"
+# ID="amzn"
+# ID_LIKE="centos rhel fedora"
+# VERSION_ID="2"
+# PRETTY_NAME="Amazon Linux 2"
+# ANSI_COLOR="0;33"
+# CPE_NAME="cpe:2.3:o:amazon:amazon_linux:2"
+# HOME_URL="https://amazonlinux.com/"
+```
+
+In this case, [Red Hat Enterprise Linux (rhel)][rhel]/[Fedora][fedora] is
+the linux distribution, so [`yum`][yum] will be the accompanying package manager.
+
+[fedora]: https://en.wikipedia.org/wiki/Fedora_Linux
+[redrhelhat]: https://en.wikipedia.org/wiki/Red_Hat_Enterprise_Linux
+[yum]: https://en.wikipedia.org/wiki/Yum_(software)
+
+# Fedora
+
+## Git
+
+https://git-scm.com/download/linux
+
+```bash
+sudo yum update -y
+
+sudo yum install git
+```
+
+## Docker
+
+```bash
+sudo yum-config-manager --disable download.docker.com_linux_centos_docker-ce.rep
+sudo amazon-linux-extras install docker
+sudo service docker start
+sudo systemctl enable docker
+```
+
+> **Note**
+>
+> How to fix "dial unix /var/run/docker.sock: connect: permission denied" when group permissions seem correct?
+>
+> ```bash
+> sudo setfacl --modify user:ec2-user:rw /var/run/docker.sock
+> ```
+>
+> https://stackoverflow.com/a/54504083/9823455
+
+## Nix
+
+https://nixos.org/download.html
+
+```bash
+sh <(curl -L https://nixos.org/nix/install) --daemon
+```
