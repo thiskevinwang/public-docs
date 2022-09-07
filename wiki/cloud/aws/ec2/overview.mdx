@@ -59,6 +59,46 @@ The one important setting to check is:
 Though this is not the most secure, the `.pem` key requirement
 serves as reasonable line of defense against bad actors.
 
+### Security groups
+
+A default security group will likely get auto-created upon
+instance launch. It’ll be named something like `launch-wizard-2`.
+
+Allowing inbound SSH traffic from `0.0.0.0/0` results in an _inbound rule_ like
+
+| Name | Security group rule ID | IP version | Type | Protocol | Port range | Source    | Description |
+| ---- | ---------------------- | ---------- | ---- | -------- | ---------- | --------- | ----------- |
+| -    | sgr-0a0000a00aaaa0000  | IPv4       | SSH  | TCP      | 22         | 0.0.0.0/0 | -           |
+
+```mermaid
+%% using GitHub container registry
+graph TD
+    R53("Route53")
+    LB("Load Balancer")
+    TG("Target group")
+        Human --https://waypoint.thekevinwang.com-->R53
+        R53 --> LB
+        LB --Listener:80--> TG
+        LB --Listener:443--> TG
+    subgraph AWS
+        ACM
+        TG
+        R53
+        subgraph security group
+            LB
+            Instance
+        end
+    end
+
+    subgraph public
+        Human
+    end
+
+    R53 -..-> ACM
+    LB -..-> ACM
+    TG --HTTPS: 443--> Instance -.:9702.-> Instance
+```
+
 ## Configure storage
 
 No comment
