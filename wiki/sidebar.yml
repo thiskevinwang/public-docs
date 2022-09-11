@@ -1,26 +1,26 @@
 ---
 - name: Overview
-  href: /wiki/overview
+  href: /wiki
   singleFile: true
 ############
 - name: Tech
   separator: true
 - name: Terminal
-  href: /wiki/terminal/overview
+  href: /wiki/terminal
   posts:
     - name: JSON & YAML Wrangling
       href: /wiki/terminal/json-yaml-wrangling
 - name: Nix Shell
-  href: /wiki/nix-shell/overview
+  href: /wiki/nix-shell
   singleFile: true
 - name: Cloud
-  href: /wiki/cloud/overview
+  href: /wiki/cloud
   posts:
     - name: Amazon Web Services (AWS)
-      href: /wiki/cloud/aws/overview
+      href: /wiki/cloud/aws
       posts:
         - name: EC2
-          href: /wiki/cloud/aws/ec2/overview
+          href: /wiki/cloud/aws/ec2
           posts:
             - name: VM Setup
               href: /wiki/cloud/aws/ec2/vm-setup
@@ -31,98 +31,98 @@
     - name: Google Cloud Platform (GCP)
       href: /wiki/cloud/gcp
 - name: Kubernetes
-  href: /wiki/kubernetes/overview
+  href: /wiki/kubernetes
   posts:
     - name: Helm
-      href: /wiki/kubernetes/helm/overview
+      href: /wiki/kubernetes/helm
       posts:
         - name: Redis
           href: /wiki/kubernetes/helm/redis
 - name: Databases
-  href: /wiki/databases/overview
+  href: /wiki/databases
   posts:
     - name: DynamoDB
-      href: /wiki/databases/dynamo/overview
+      href: /wiki/databases/dynamo
       posts: []
     - name: PostgreSQL
-      href: /wiki/databases/postgres/overview
+      href: /wiki/databases/postgres
       posts:
         - name: Management
           href: /wiki/databases/postgres/management
         - name: Queries
           href: /wiki/databases/postgres/queries
 - name: Design Patterns
-  href: /wiki/design-patterns/overview
+  href: /wiki/design-patterns
   singleFile: true
 - name: Docker
-  href: /wiki/docker/overview
+  href: /wiki/docker
   posts:
     - name: Auth
       href: /wiki/docker/auth
 - name: Git
-  href: /wiki/git/overview
+  href: /wiki/git
 - name: GitHub
-  href: /wiki/github/overview
+  href: /wiki/github
   posts:
     - name: API
-      href: /wiki/github/api/overview
+      href: /wiki/github/api
       posts:
         - name: GraphQL (v4)
           href: /wiki/github/api/graphql
         - name: REST (v3)
           href: /wiki/github/api/rest
     - name: Actions
-      href: /wiki/github/actions/overview
+      href: /wiki/github/actions
     - name: Releases
-      href: /wiki/github/releases/overview
+      href: /wiki/github/releases
     - name: Webhook Events
       href: /wiki/github/webhook-events
     - name: Deployments
       href: /wiki/github/deployments
 - name: Go
-  href: /wiki/go/overview
+  href: /wiki/go
   posts:
     - name: Embed
       href: /wiki/go/embed
     - name: Template
       href: /wiki/go/template
 - name: Terraform
-  href: /wiki/terraform/overview
+  href: /wiki/terraform
   posts:
     - name: GitHub Provider
       href: /wiki/terraform/github
 - name: Waypoint
-  href: /wiki/waypoint/overview
+  href: /wiki/waypoint
   posts:
     - name: Waypoint on K8s
       href: /wiki/waypoint/k8s
 - name: JavaScript
-  href: /wiki/javascript/overview
+  href: /wiki/javascript
   posts:
     - name: Regex
       href: /wiki/javascript/regex
 - name: Talks
-  href: /wiki/talks/overview
+  href: /wiki/talks
   singleFile: true
 ############
 - name: Arts
   separator: true
 - name: Music
-  href: /wiki/music/overview
+  href: /wiki/music
   posts: []
   singleFile: true
 ############
 - name: Life
   separator: true
 - name: Journal
-  href: /wiki/journal/overview
+  href: /wiki/journal
   posts:
     - name: 2022, Week 31
       href: /wiki/journal/2022-week-31
     - name: 2022, Week 32
       href: /wiki/journal/2022-week-32
 - name: Hobbies
-  href: /wiki/hobbies/overview
+  href: /wiki/hobbies
   singleFile: true
 - name: Other
   separator: true
@@ -133,7 +133,7 @@
   href: /wiki/scribbles
   singleFile: true
 - name: Meta
-  href: /wiki/meta/website
+  href: /wiki/meta
   posts:
     - name: Sidebar
       href: /wiki/meta/sidebar
