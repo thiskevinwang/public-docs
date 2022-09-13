@@ -43,8 +43,8 @@ will be an `.html` file, located in the bucket at this particular path:
 
 <Tree
   style={{
-    "--geist-background": "var(--accents-1)",
-    marginLeft: "var(--geist-gap)",
+    '--geist-background': 'var(--accents-1)',
+    marginLeft: 'var(--geist-gap)',
   }}
 >
   <Folder name="{{BUCKET}}" defaultOpen>
@@ -55,7 +55,7 @@ will be an `.html` file, located in the bucket at this particular path:
             <Folder name="aws/" defaultOpen>
               <File
                 name="s3.html"
-                style={{ fontWeight: "bold", color: "var(--geist-success)" }}
+                style={{ fontWeight: 'bold', color: 'var(--geist-success)' }}
               />
             </Folder>
           </Folder>
@@ -144,7 +144,7 @@ by some incompatibility with the `target: "serverless"` config that
 
 Throughout this process, I had built my site several times. My site
 makes calls to the GitHub GraphQL API for data to statically render
-pages — mostly the pages on this [`wiki`](/wiki/overview) portion of the
+pages — mostly the pages on this [`wiki`](/wiki) portion of the
 site. I hadn’t yet optimized these calls, but I quickly realized that
 I was exceeding the 5000 req/hr rate limit.
 
@@ -227,9 +227,9 @@ async function callApi(key) {
   cache[key] ??= await fetch(key);
 }
 
-await callApi("foo");
-await callApi("foo");
-await callApi("foo");
+await callApi('foo');
+await callApi('foo');
+await callApi('foo');
 ```
 
 I eventually optimized a few repeat API calls, resolved my rate limit nightmare,
@@ -242,7 +242,7 @@ Awful life decision of staying up.
 
 {/* this span is here to help color the invisible checkmark inside the checkbox */}
 
-<span style={{ "--geist-background": "var(--accents-1)" }}>
+<span style={{ '--geist-background': 'var(--accents-1)' }}>
   - [ ] Use a different GitHub account's PAT for API calls.
 </span>
 
