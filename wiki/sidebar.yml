@@ -35,9 +35,6 @@
   posts:
     - name: Helm
       href: /wiki/kubernetes/helm
-      posts:
-        - name: Redis
-          href: /wiki/kubernetes/helm/redis
 - name: Databases
   href: /wiki/databases
   posts:
