@@ -40,7 +40,7 @@ function getPathsFromYml() {
 
   // only keep the 'href's
   const paths = Object.values(res as Record<string, string>).filter(
-    (x: string) => x.startsWith?.("/wiki/")
+    (x: string) => x.startsWith?.("/wiki")
   );
 
   return paths;
@@ -55,15 +55,19 @@ function getPathsFromMdx() {
     traverseAll: true,
   });
 
+  // - remove `.mdx` extension
+  // - remove `index` basename
+  // - remove trailing `/`
+  // - remove lone `/wiki` path
   const paths = files.map((file) =>
-    file.path.replace(cwd, "").replace(/\.mdx$/i, "")
-  );
+    file.path.replace(cwd, "").replace(/(index)?\.mdx$/i, "").replace(/\/$/i,"")
+  )
 
   return paths;
 }
 
 /**
- * npx chokidar-cli . -c "npx ts-node scripts/yml-mdx.ts"
+ * npx chokidar-cli . -c "npx ts-node --esm scripts/yml-mdx.ts"
  */
 async function main() {
   event("gathering paths in /wiki/sidebar.yml");
@@ -71,16 +75,16 @@ async function main() {
   event("gathering paths from wiki/");
   const b = getPathsFromMdx().sort();
 
-  const aDiff = _.difference(a, b);
-  const bDiff = _.difference(b, a);
+  const ymlDiff = _.difference(a, b);
+  const mdxDiff = _.difference(b, a);
 
   assert.ok(
-    _.isEmpty(aDiff),
-    `YML list contains extra paths: [${aDiff.join(",")}]`
+    _.isEmpty(ymlDiff),
+    `YML list contains extra paths: [${ymlDiff.join(",")}]`
   );
   assert.ok(
-    _.isEmpty(bDiff),
-    `MDX list contains extra paths: [${bDiff.join(",")}]`
+    _.isEmpty(mdxDiff),
+    `MDX list contains extra paths: [${mdxDiff.join(",")}]`
   );
 
   for (let i = 0; i < a.length; i++) {
