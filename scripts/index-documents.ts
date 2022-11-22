@@ -18,17 +18,14 @@ import { Parser } from 'retext-english';
 import retextStringify from 'retext-stringify';
 import { unified } from 'unified';
 
+import * as lyra from "@lyrasearch/lyra"
+import * as persistence from "@lyrasearch/plugin-data-persistence"
+
+
 dotenv.config();
 
-const client = new Client({
-  node: process.env.ELASTIC_NODE,
-  auth: {
-    username: process.env.ELASTIC_USERNAME!,
-    password: process.env.ELASTIC_PASSWORD!,
-  },
-});
 
-const INDEX_NAME = 'wiki';
+
 
 type Datum = {
   id: string;
@@ -105,7 +102,7 @@ async function main() {
       id,
       contents: String(vfile),
       name: data.name,
-      description: data.description,
+      description: data.description || "",
       // Grab this from one level up
       category: parentId
         ? getNavDataNameForHref(navData, parentId)?.name || null
@@ -124,7 +121,16 @@ async function main() {
   }
 
   console.log('Item count:', dataset.length);
-
+  
+  // ELASTIC SEARCH
+  const client = new Client({
+    node: process.env.ELASTIC_NODE,
+    auth: {
+      username: process.env.ELASTIC_USERNAME!,
+      password: process.env.ELASTIC_PASSWORD!,
+    },
+  });
+  const INDEX_NAME = 'wiki';
   /**
    * DELETE & CREATE OUR INDEX
    */
@@ -140,6 +146,17 @@ async function main() {
 
   await client.bulk({ refresh: true, body });
   // await client.indices.refresh({ index: INDEX_NAME });
+
+  // LYRA SEARCH
+  const lyraInstance = lyra.create({
+    schema: {
+      name: 'string',
+      contents: "string",
+      description: "string",
+    }
+  })
+  await lyra.insertBatch(lyraInstance, dataset,{ batchSize: 100,language:'english' })
+  persistence.persistToFile(lyraInstance, "json", "lyra.json")
 }
 
 main();
