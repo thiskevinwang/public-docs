@@ -1,18 +1,23 @@
 import * as fs from "fs";
 import * as path from "path";
-import walk from "klaw-sync";
-import matter from "gray-matter";
-import { program } from "commander";
 
-// npx ts-node scripts/frontmatter.ts --dir=posts --strategy=local
+import { program } from "commander";
+import matter from "gray-matter";
+import walk from "klaw-sync";
+
+import L from "@lib/logger";
+
+// node --loader ts-node/esm scripts/frontmatter.ts --dir=posts --strategy=local
 
 program.option("--first", "foobar").option("-s, --separator <char>");
 
 program.parse();
 
 function main() {
-  const dir = program.args[0] || process.cwd();
-  console.log("dir:", dir);
+  L.event("checking frontmatter");
+  const dir = program.args[0] || path.join(process.cwd(), "wiki");
+
+  L.info("directory:", dir);
 
   const files = walk(dir, {
     filter: (file) => !!file.path.match(/\.mdx?$/),
@@ -23,15 +28,17 @@ function main() {
     const filepath = file.path;
     const source = fs.readFileSync(filepath, "utf8");
     const { data, content } = matter(source);
-    console.log(filepath);
-    console.log(data);
+    L.event("parsed file", filepath);
+
     if (Object.keys(data).length === 0) {
-      console.log("no data");
+      L.warn(" - no frontmatter");
       // insert frontmatter
       const contents = matter.stringify(content, {});
       fs.writeFileSync(filepath, contents);
     }
   });
+
+  L.ready("ok");
 }
 
 main();
