@@ -1,5 +1,23 @@
 {
+  "extends": "ts-node/node16/tsconfig.json",
+  "ts-node": {
+    // Enable absolute imports
+    // https://stackoverflow.com/a/72622089/9823455
+    "require": ["tsconfig-paths/register"],
+    "transpileOnly": true,
+    "swc": true,
+    // Override base tsconfig compiler options
+    "compilerOptions": {
+      // import * as fs from "fs";
+      // ^^^^^^
+      // SyntaxError: Cannot use import statement outside a module
+      "module": "CommonJS"
+    }
+  },
   "compilerOptions": {
+    "paths": {
+      "@lib/*": ["./lib/*"]
+    },
     "module": "ESNext",
     "target": "ESNext",
     "moduleResolution": "node",

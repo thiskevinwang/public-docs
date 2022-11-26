@@ -4,7 +4,16 @@ module.exports = {
   trailingComma: "all",
   singleQuote: false,
   semi: true,
-  importOrder: ["^(path|fs)$", "<THIRD_PARTY_MODULES>", "^[./]"],
+  importOrder: [
+    // node stdlib
+    "^(path|fs)$",
+    // node_modules
+    "<THIRD_PARTY_MODULES>",
+    // local lib imports
+    "^@lib/(.*)$",
+    // relative imports
+    "^[./]",
+  ],
   importOrderSeparation: true,
   importOrderSortSpecifiers: true,
 };
