@@ -1,17 +1,20 @@
 import * as fs from "fs";
 import * as path from "path";
-import * as assert from "assert";
 
-import * as yaml from "js-yaml";
 import flat from "flat";
+import * as yaml from "js-yaml";
+
+import L from "@lib/logger";
 
 /**
- * npx ts-node scripts/get-paths.ts
+ * node --loader ts-node/esm scripts/get-paths.ts
  */
 function main() {
+  L.event("getting paths");
   const cwd = process.cwd();
   const pathToYaml = path.join(cwd, "wiki/sidebar.yml");
   const yamlStr = fs.readFileSync(pathToYaml, "utf8");
+  L.info({ pathToYaml });
 
   // convert yaml string to json object
   const json = yaml.load(yamlStr);
@@ -19,9 +22,12 @@ function main() {
   const res = flat(json);
   // collect paths — only keep the 'href's that start with '/wiki/'
   const paths = Object.values(res as Record<string, string>).filter(
-    (x: string) => x.startsWith?.("/wiki/")
+    (x: string) => x.startsWith?.("/wiki/"),
   );
+
+  L.info(paths);
+  L.ready("ok");
   return paths;
 }
 
-console.log(main());
+main();
