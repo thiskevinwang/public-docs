@@ -1,10 +1,10 @@
 module.exports = {
   printWidth: 80,
   tabWidth: 2,
-  trailingComma: 'all',
-  singleQuote: true,
+  trailingComma: "all",
+  singleQuote: false,
   semi: true,
-  importOrder: ['^[./]'],
+  importOrder: ["^(path|fs)$", "<THIRD_PARTY_MODULES>", "^[./]"],
   importOrderSeparation: true,
   importOrderSortSpecifiers: true,
 };
