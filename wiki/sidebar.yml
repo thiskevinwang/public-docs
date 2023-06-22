@@ -98,6 +98,11 @@
   posts:
     - name: Regex
       href: /wiki/javascript/regex
+- name: Next.js
+  href: /wiki/nextjs
+  posts:
+    - name: App Router
+      href: /wiki/nextjs/app-router
 - name: Talks
   href: /wiki/talks
   singleFile: true
