@@ -1,0 +1,67 @@
+---
+name: Next.js App Router
+description: Some Patterns
+---
+
+I personally don’t like the `/views` folder pattern. 
+
+I _do_ like being able to make a leaf file as slim as possible...
+
+```tsx filename="pages/blog/[...slug]/index.tsx"
+export { default } from "@/views/blog"
+export { getStaticProps, getStaticPaths } from "@/views/blog/server"
+```
+
+But this `/views` folder is mostly arbitrary and a hack around Next.js's
+limitation that all files in the `/pages` directory most be pages.
+
+- https://github.com/vercel/next.js/issues/8454
+
+Now with the `/app` directory, colocation of non-page files is possible.
+
+<div style={{marginLeft: "var(--geist-gap)"}}>
+  <Tree>
+    <Folder name="." defaultOpen>
+      <Folder name="app" defaultOpen>
+        <File name="data.ts"    style={{ color: "var(--ds-green-900)" }} />
+        <File name="layout.tsx" style={{ color: "var(--ds-green-900)" }} />
+        <File name="view.tsx"   style={{ color: "var(--ds-green-900)" }} />
+        <File name="page.tsx"   style={{ color: "var(--ds-amber-900)" }} />
+      </Folder>
+      <Folder name="pages"     defaultOpen>
+        <File name="index.tsx" style={{ color: "var(--ds-amber-900)" }} />
+      </Folder>
+      <Folder name="layouts"   defaultOpen style={{ color: "var(--ds-red-900)"}}>
+        <File name="index.tsx" style={{ color: "var(--ds-red-900)" }} />
+      </Folder>
+      <Folder name="views"     defaultOpen style={{ color: "var(--ds-red-900)"}}>
+        <File name="index.tsx" style={{ color: "var(--ds-red-900)" }} />
+        <File name="server.ts" style={{ color: "var(--ds-red-900)" }} />
+      </Folder>
+    </Folder>
+  </Tree>
+</div>
+
+```tsx filename="app/(blog)/[...slug]/page.tsx"
+import BlogView from "@/app/(blog)/[...slug]/view";
+// These two method names are artifacts from a migration from the pages dir
+import { getStaticPaths, getStaticProps } from "@/app/(blog)/[...slug]/data";
+
+export const revalidate = false;
+export const dynamic = "force-static";
+
+export async function generateMetadata({ params }, parent) {
+  /* */
+}
+
+export async function generateStaticParams() {
+  const { paths } = await getStaticPaths();
+  return paths.map((e) => e.params);
+}
+
+export default async function BlogPage({ params }) {
+  const { props } = await getStaticProps({ params });
+  return <BlogView {...props} />;
+}
+```
+
