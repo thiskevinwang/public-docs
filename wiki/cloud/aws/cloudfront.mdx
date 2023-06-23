@@ -86,7 +86,11 @@ That's it. And it's ready in about 3 minutes.
 The uniqueness of the GitHub API endpoint, `/repos/:owner/:repo/git/blobs/:file_sha`, lends it 
 self nicely to a almost-zero-config CloudFront setup.
 
-Here's Postman Test script for handy observability.
+### Rate-limit sanity check
+
+Here's Postman Test script for handy rate-limit observability when making
+GitHub API calls. I know there's a dedicated `/rate_limit` endpoint, but 
+I prefer not calling that simply to avoid tabbing back and forth within Postman.
 
 ```js
 function msToTime(duration) {
