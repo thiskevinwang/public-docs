@@ -1,0 +1,109 @@
+---
+name: CloudFront
+description: Edge cache with some compute moderately bizarre limitations
+---
+
+> **Warning**: This section is under construction
+
+## Caching GitHub API Responses
+
+On this wiki itself, I leverage remote content from https://github.com/thiskevinwang/public-docs
+(checkout the `manifestless` branch).
+
+To construct the lefthand navigation sidebar, I leverage the structure of the filesystem from
+https://github.com/thiskevinwang/public-docs. But because this is a separate repository,
+I call the GitHub API to get that data.
+
+`GET /repos/:owner/:repo/git/trees/:tree_sha?recursive=0` gives me back a JSON blob like the following,
+and while not depicted, it contains everything under the `wiki` directory which is what I ultimately want.
+
+```json
+{
+    "sha": "ce8d144a8c1425dcdb39b8e1f3bf4dc2838cf2d0",
+    "url": "https://api.github.com/repos/thiskevinwang/public-docs/git/trees/ce8d144a8c1425dcdb39b8e1f3bf4dc2838cf2d0",
+    "tree": [
+        {
+            "path": ".gitignore",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "1a1d7b3f64a295cce370b01937cd3af1efa56182",
+            "size": 34,
+            "url": "https://api.github.com/repos/thiskevinwang/public-docs/git/blobs/1a1d7b3f64a295cce370b01937cd3af1efa56182"
+        },
+        {
+            "path": "scripts",
+            "mode": "040000",
+            "type": "tree",
+            "sha": "4217754238e0ad8f46bc39d7ebd8fc0057006281",
+            "url": "https://api.github.com/repos/thiskevinwang/public-docs/git/trees/4217754238e0ad8f46bc39d7ebd8fc0057006281"
+        },
+    ]
+    "truncated": false
+}        
+```
+
+Take note of the `sha` field. I use that later in blob requests.
+
+This is *1* API call. Unfortunately it doesn’t provide _pretty_ text like titles or descriptions. 
+It only returns paths which I use as website slugs. The various MDX files have frontmatter with
+`name` and `description` keys which are pleasing to the human eye.
+
+I can go fire off **N+1** or **1+N** requests to `GET /repos/:owner/:repo/git/blobs/:file_sha`,
+passing in the `sha` from earlier to fetch individual files' string contents.
+
+> **Note**: I need to set `{"Accept": "application/vnd.github.raw"}` header to fetch the raw string contents.
+
+This way I have access to MDX frontmatter and can attach pretty titles to my previously ugly
+tree JSON data.
+
+However, with 50-100's of files, this quickly burns through the `5000` request per... I think it resets every hour?...
+rate limit that GitHub sets.
+
+So for this class of requests that are conveniently unique via `:file_sha`, I can set up a 
+CloudFront proxy to cache each of these items, which I know will be quite stable, for 1 year.
+
+This significantly cuts down on my GitHub API consumption especially at page regeneration time
+and if I need to rebuild my site and have pages regenerated _again_.
+
+For the CloudFront proxy, the notable settings I set are:
+
+- Use Legacy cache settings
+- Include `Accept` and `Authorization` headers to be part of the cache key
+- Set custom cache TTLs (seconds)
+  - Minimum: `31536000` 
+  - Maximum: `31536000`
+  - Default: `31536000`
+
+That's it. And it's ready in about 3 minutes.
+
+The uniqueness of the GitHub API endpoint, `/repos/:owner/:repo/git/blobs/:file_sha`, lends it 
+self nicely to a almost-zero-config CloudFront setup.
+---
+
+Here's Postman Test script for handy observability.
+
+```js
+function msToTime(duration) {
+  var milliseconds = Math.floor((duration % 1000) / 100),
+    seconds = Math.floor((duration / 1000) % 60),
+    minutes = Math.floor((duration / (1000 * 60)) % 60),
+    hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
+
+  hours = (hours < 10) ? "0" + hours : hours;
+  minutes = (minutes < 10) ? "0" + minutes : minutes;
+  seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+  return hours + "h " + minutes + "m " + seconds + "s " + milliseconds + "ms";
+}
+
+pm.test("Log rate limit details", function () {
+    console.log("Rate-limit remaining", pm.response.headers.get("X-RateLimit-Remaining"))
+    const resetS = pm.response.headers.get("X-RateLimit-Reset")
+    const nowMs = new Date().getTime()
+    const diff = (resetS * 1000) - nowMs
+    console.log("Reset in:", msToTime(diff))
+});
+// GET https://api.github.com/repos/thiskevinwang/public-docs/git/trees/manifestless?recursive=0
+// Rate-limit remaining 2219
+// Reset in: 00h 16m 59s 4ms
+```
