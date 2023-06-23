@@ -62,8 +62,15 @@ rate limit that GitHub sets.
 So for this class of requests that are conveniently unique via `:file_sha`, I can set up a 
 CloudFront proxy to cache each of these items, which I know will be quite stable, for 1 year.
 
-This significantly cuts down on my GitHub API consumption especially at page regeneration time
-and if I need to rebuild my site and have pages regenerated _again_.
+This significantly cuts down on my GitHub API consumption at page build time, whether that is
+at static build time or at on-demand generation time. The math is roughly `M * 1 * N`, where:
+- `M`: number of actual pages under `/wiki/[[...slug]]`
+- `1`: is the single call to `GET /repos/:owner/:repo/git/trees/:tree_sha?recursive=0`
+- `N`: is multiple calls to `GET /repos/:owner/:repo/git/blobs/:file_sha`
+  - (All of these `N` requests now go to CloudFront)
+
+
+### CloudFront Settings
 
 For the CloudFront proxy, the notable settings I set are:
 
