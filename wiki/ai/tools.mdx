@@ -6,10 +6,10 @@ description: "Various tools with baked-in intelligence"
 
 ### Mods
 
-https://github.com/charmbracelet/mods
-https://github.com/charmbracelet/glow
+- https://github.com/charmbracelet/mods
+- https://github.com/charmbracelet/glow
 
-```
+```bash
 export OPENAI_API_KEY=...
 ```
 
@@ -20,16 +20,16 @@ ISO_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 ```
 
 ```bash
-mods -f "what day of the week is $(DATE)?" | glow
-# The day of the week for Sat Jun 24 10:03:59 EDT 2023 is Saturday.
-
-mods -f "what week of the year does $(DATE) fall under?" | glow
-# The week of June 24, 2023 falls under Week 25 of the year 2023.
-```
-
-```bash
 # ~/.zshrc
 function ask() {
   mods -f "$1" | glow
 }
+```
+
+```bash
+ask "what day of the week is $(DATE)?"
+# The day of the week for Sat Jun 24 10:03:59 EDT 2023 is Saturday.
+
+ask "what week of the year does $(DATE) fall under?"
+# The week of June 24, 2023 falls under Week 25 of the year 2023.
 ```
