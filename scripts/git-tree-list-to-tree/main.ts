@@ -1,4 +1,6 @@
 import * as path from "node:path";
+
+import { FrontmatterSchema } from "@/lib/schema.js";
 import { VFile } from "vfile";
 import { matter } from "vfile-matter";
 
@@ -66,10 +68,7 @@ async function listTotree(
 
     const file = new VFile({ path: category, value: gitBlob });
     matter(file, { strip: true });
-    const frontmatter = file.data.matter as {
-      name: string;
-      description?: string;
-    };
+    const frontmatter = file.data.matter as FrontmatterSchema;
 
     // console.log(category);
     dirname.split("/").forEach((part, i, arr) => {
@@ -84,9 +83,9 @@ async function listTotree(
         if (!entry) {
           tree.push({
             children: [],
-            description: "",
+            description: frontmatter.description,
             path: itemPath,
-            title: frontmatter.name,
+            title: frontmatter.nav_title,
           });
         }
       } else {
@@ -97,9 +96,9 @@ async function listTotree(
           if (parent) {
             parent.children.push({
               children: [],
-              description: frontmatter.description || "",
+              description: frontmatter.description,
               path: itemPath,
-              title: frontmatter.name,
+              title: frontmatter.nav_title,
             });
           }
         }
@@ -120,10 +119,7 @@ async function listTotree(
     );
     const file = new VFile({ path: page, value: gitBlob });
     matter(file, { strip: true });
-    const frontmatter = file.data.matter as {
-      name: string;
-      description?: string;
-    };
+    const frontmatter = file.data.matter as FrontmatterSchema;
 
     const urlpath = page.replace(/\.mdx?$/, "");
 
@@ -132,9 +128,9 @@ async function listTotree(
     if (entry) {
       entry.children.push({
         children: [],
-        description: frontmatter.description || "",
+        description: frontmatter.description,
         path: urlpath,
-        title: frontmatter.name,
+        title: frontmatter.nav_title,
       });
     }
   }
@@ -142,7 +138,7 @@ async function listTotree(
   return tree;
 }
 
-async function main() {
+export async function main() {
   console.log("hello");
   const treeJson = await fetchGitTree(
     "thiskevinwang",
@@ -152,10 +148,7 @@ async function main() {
   console.log("ok");
 
   const tree = await listTotree(treeJson);
+  console.log(tree);
 
-  console.log(tree[0].children);
+  return tree;
 }
-
-main();
-
-export default {};
