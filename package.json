@@ -44,8 +44,10 @@
     "remark-stringify": "^10.0.2",
     "retext-english": "^4.1.0",
     "retext-stringify": "^3.1.0",
+    "to-vfile": "^8.0.0",
     "unified": "^10.1.2",
     "vfile": "^6.0.0",
+    "vfile-find-down": "^7.0.0",
     "vfile-matter": "^5.0.0",
     "zod": "^3.21.4"
   },
