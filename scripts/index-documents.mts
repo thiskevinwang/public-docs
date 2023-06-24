@@ -54,12 +54,6 @@ async function main() {
   const cwd = process.cwd();
   const dir = path.join(cwd, "wiki");
 
-  const pathToYaml = path.join(cwd, "wiki/sidebar.yml");
-  const yamlStr = fs.readFileSync(pathToYaml, "utf8");
-
-  // convert yaml string to json object
-  const navData = yaml.load(yamlStr) as Node[];
-
   // gather all mdx files
   const files = walk(dir, {
     filter: (file) => !!file.path.match(/\.mdx?$/),
@@ -107,9 +101,8 @@ async function main() {
       name: data.name,
       description: data.description || "",
       // Grab this from one level up
-      category: parentId
-        ? getNavDataNameForHref(navData, parentId)?.name || null
-        : null,
+      // TODO: reimplement after deleting nav data
+      category: null,
       hierarchy: {
         lvl0: null,
         lvl1: null,

@@ -1,14 +1,12 @@
-import { execSync } from "child_process";
-import * as fs from "fs";
-import * as path from "path";
-
 // Use inquirer v8 to avoid ESM
 import inquirer from "inquirer";
 import walk from "klaw-sync";
+import { execSync } from "node:child_process";
+import * as path from "node:path";
 
-import L from "@lib/logger";
+import L from "../lib/logger.js";
 
-function main() {
+async function main() {
   const cwd = process.cwd();
   const dir = path.join(cwd, "scripts");
 

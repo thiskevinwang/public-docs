@@ -1,31 +1,17 @@
 {
-  "ts-node": {
-    // Enable absolute imports
-    // https://stackoverflow.com/a/72622089/9823455
-    "require": ["tsconfig-paths/register"],
-    "transpileOnly": true,
-    "swc": true,
-    // Override base tsconfig compiler options
-    "compilerOptions": {
-      // import * as fs from "fs";
-      // ^^^^^^
-      // SyntaxError: Cannot use import statement outside a module
-      "module": "CommonJS"
-    }
-  },
   "compilerOptions": {
     "paths": {
       "@lib/*": ["./lib/*"]
     },
-    "module": "ESNext",
+    "module": "NodeNext",
     "target": "ESNext",
-    "moduleResolution": "node",
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "isolatedModules": true,
+    "moduleResolution": "NodeNext",
+    // "esModuleInterop": true,
+    // "allowSyntheticDefaultImports": true,
+    // "isolatedModules": true,
     "noEmit": true,
-    "strict": true,
-    "lib": ["es2020"],
-    "resolveJsonModule": true
+    "strict": true
+    // "lib": ["es2020"],
+    // "resolveJsonModule": true
   }
 }
