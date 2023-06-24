@@ -1,0 +1,102 @@
+---
+title: Week 25
+nav_title: Week 25
+description: |
+  Monday, June 19 to Sunday, June 25
+---
+
+{/* # Monday
+
+# Tuesday
+
+# Wednesday
+
+# Thursday
+
+# Friday
+
+# Saturday
+
+# Sunday */}
+
+
+# Monday
+
+It was a holiday. 
+
+I sent this very fun indoor boulder problem https://www.instagram.com/reel/CtsMml9PS_Y/?igshid=MzRlODBiNWFlZA==
+
+On Sunday, I also re-sent a local crimpy V9 for the fourth time. https://www.instagram.com/reel/Ctrj5Z3vH4M/.
+This was my 2nd time climbing outdoors since my ACL surgery and it felt absolutely
+amazing to redo this problem.
+
+
+# Tuesday
+
+# Wednesday
+
+I had physical therapy. Did some fun plyometric exercises, like single leg hops and box jumps.
+
+I setup bi-weekly 1:1s with two adjacent-teammates, Zach and Kendall, to keep in closer touch
+with them and look out for any platform-work opportunities or blind spots.
+
+# Thursday
+
+Had 1:1 with my manager Kaitlynne.
+
+Converted my this Wiki section of my site to no longer use a YAML file for navigation data,
+and instead rely on a tree data structure, derived directly from the git tree and blob data.
+
+`GET /repos/:owner/:repo/git/trees/:tree_sha` returns a flat list of all the folders and files
+in a repository, but no contents.
+
+```bash
+curl \
+  --location 'https://api.github.com/repos/thiskevinwang/public-docs/git/trees/manifestless?recursive=0'
+```
+
+The `sha` fields in the response can be used to fetch the contents, and in my case, the contents
+contain YAML frontmatter which has human-friendly text like `title` which I can use to provide
+a pretty label for navigation tree items.
+
+`GET /repos/:owner/:repo/git/blobs/:file_sha` returns the contents of a file, base64 encoded, but
+when you include `Accept: application/vnd.github.raw` as a header, the response is returned as
+`Content-Type: text/plain; charset=utf-8`.
+
+```bash
+curl \
+  --location'https://api.github.com/repos/thiskevinwang/public-docs/git/blobs/6d71f922a0f925d26fdf6da99d19921cf6924baf' \
+  --header 'Accept: application/vnd.github.raw'
+```
+
+
+# Friday
+
+I had physical therapy. Did some more strength oriented exercises.
+
+Got some nice shoutouts from my teammates on recent build-time optimization work for our flagship apps:
+
+- https://hashicorp.slack.com/archives/C02T80JTNS2/p1687462168989659- 
+- https://hashicorp.slack.com/archives/C058H0MULTE/p1687468229404229
+
+Removed legacy `getInitialProps` from `dev-portal`, in service of easier app router migration.
+- https://github.com/hashicorp/dev-portal/pull/2021
+
+Sent this other fun boulder problem: https://www.instagram.com/reel/Ct3EhnTPNY4/?igshid=MzRlODBiNWFlZA==
+
+
+# Saturday
+
+Came up with a nifty terminal AI zsh function:
+
+```bash
+function ask() {
+  mods -f "$1" | glow
+}
+```
+
+Did more work on my personal website.
+
+Did some wiki writing.
+
+# Sunday
