@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
     "paths": {
-      "@lib/*": ["./lib/*"]
+      // "@/lib/*": ["./lib/*"],
+      "@/*": ["./*"]
     },
     "module": "NodeNext",
     "target": "ESNext",
