@@ -44,7 +44,7 @@ with them and look out for any platform-work opportunities or blind spots.
 
 Had 1:1 with my manager Kaitlynne.
 
-Converted my this Wiki section of my site to no longer use a YAML file for navigation data,
+Converted this Wiki section of my site to no longer use a YAML file for navigation data,
 and instead rely on a tree data structure, derived directly from the git tree and blob data.
 
 `GET /repos/:owner/:repo/git/trees/:tree_sha` returns a flat list of all the folders and files
@@ -60,7 +60,7 @@ contain YAML frontmatter which has human-friendly text like `title` which I can 
 a pretty label for navigation tree items.
 
 `GET /repos/:owner/:repo/git/blobs/:file_sha` returns the contents of a file, base64 encoded, but
-when you include `Accept: application/vnd.github.raw` as a header, the response is returned as
+when you include `Accept: application/vnd.github.raw` as a header, the response is returned as plaintext — 
 `Content-Type: text/plain; charset=utf-8`.
 
 ```bash
