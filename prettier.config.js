@@ -6,6 +6,7 @@ module.exports = {
   semi: true,
   importOrder: [
     // node stdlib
+    "^node:",
     "^(path|fs|child_process)$",
     // node_modules
     "<THIRD_PARTY_MODULES>",
