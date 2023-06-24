@@ -1,8 +1,8 @@
-// Use inquirer v8 to avoid ESM
-import inquirer from "inquirer";
-import walk from "klaw-sync";
 import { execSync } from "node:child_process";
 import * as path from "node:path";
+
+import inquirer from "inquirer";
+import { Test, findDownAll } from "vfile-find-down";
 
 import L from "../lib/logger.js";
 
@@ -10,15 +10,18 @@ async function main() {
   const cwd = process.cwd();
   const dir = path.join(cwd, "scripts");
 
-  const files = walk(dir, {
-    filter: (file) =>
-      // all .ts files
-      !!file.path.match(/\.m?ts$/) &&
-      // except index.ts
-      !file.path.endsWith("index.ts") &&
-      !file.path.includes("helpers"),
-    traverseAll: true,
-  }).map((e) => e.path.replace(process.cwd(), "").replace(/^\//, ""));
+  let test: Test = (file) => {
+    return {
+      include: !!file.path.match(/\.m?ts$/),
+      skip: file.path.endsWith("index.ts"),
+      exclude: file.path.includes("helpers"),
+    };
+  };
+  const files = await findDownAll(test, dir);
+
+  const choices = files.map((e) =>
+    e.path.replace(process.cwd(), "").replace(/^\//, ""),
+  );
 
   L.event("scripts...");
 
@@ -27,7 +30,7 @@ async function main() {
       name: "_script",
       message: "Pick a script to execute",
       type: "list",
-      choices: files,
+      choices: choices,
     })
     .then(({ _script }) => {
       L.event("running", _script);

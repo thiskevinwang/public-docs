@@ -1,13 +1,7 @@
-//must be v7
-import * as fs from "fs";
-import * as path from "path";
+import * as path from "node:path";
 
 import * as lyra from "@lyrasearch/lyra";
 import * as persistence from "@lyrasearch/plugin-data-persistence";
-import * as dotenv from "dotenv";
-import matter from "gray-matter";
-import * as yaml from "js-yaml";
-import walk from "klaw-sync";
 // import rehypeParse from "rehype-parse";
 // import rehypeRetext from "rehype-retext";
 // import rehypeStringify from "rehype-stringify";
@@ -18,30 +12,42 @@ import remarkRetext from "remark-retext";
 import remarkStringify from "remark-stringify";
 import { Parser } from "retext-english";
 import retextStringify from "retext-stringify";
+import { read, write } from "to-vfile";
 import { unified } from "unified";
+import { findDownAll } from "vfile-find-down";
+import { matter } from "vfile-matter";
+import * as z from "zod";
 
-// TODO: figure out importing local `.ts` from `.mts`
-// import L from "../lib/logger";
+import L from "../lib/logger.js";
+import { getObject } from "./git-tree-list-to-tree/get-object.js";
+import { main as getTree } from "./git-tree-list-to-tree/main.js";
 
-dotenv.config();
-
-type Datum = {
-  id: string;
-  contents: string;
-  name: string;
-  description: string;
-  category: string | null;
-  hierarchy: {
-    lvl0: string | null;
-    lvl1: string | null;
-    lvl2: string | null;
-    lvl3: string | null;
-    lvl4: string | null;
-    lvl5: string | null;
-    lvl6: string | null;
-  };
-  type: keyof Datum["hierarchy"];
-};
+const LyraItemSchema = z.object({
+  id: z.string(),
+  contents: z.string(),
+  name: z.string(),
+  description: z.string(),
+  category: z.string().nullable(),
+  hierarchy: z.object({
+    lvl0: z.string().nullable(),
+    lvl1: z.string().nullable(),
+    lvl2: z.string().nullable(),
+    lvl3: z.string().nullable(),
+    lvl4: z.string().nullable(),
+    lvl5: z.string().nullable(),
+    lvl6: z.string().nullable(),
+  }),
+  type: z.union([
+    z.literal("lvl0"),
+    z.literal("lvl1"),
+    z.literal("lvl2"),
+    z.literal("lvl3"),
+    z.literal("lvl4"),
+    z.literal("lvl5"),
+    z.literal("lvl6"),
+  ]),
+});
+type LyraItemSchema = z.infer<typeof LyraItemSchema>;
 
 /**
  * node --loader ts-node/esm scripts/index-documents.ts
@@ -50,18 +56,17 @@ type Datum = {
  * As a result the file extension is `.mts`
  */
 async function main() {
-  console.log("indexing documents");
+  L.info("indexing documents");
   const cwd = process.cwd();
   const dir = path.join(cwd, "wiki");
 
-  // gather all mdx files
-  const files = walk(dir, {
-    filter: (file) => !!file.path.match(/\.mdx?$/),
-    traverseAll: true,
-  });
-  console.log(files.length, "files");
+  const tree = await getTree();
 
-  let dataset: Datum[] = [];
+  // gather all mdx files
+  const files = await findDownAll(".mdx", dir);
+  L.info("found", files.length, "files");
+
+  let dataset: LyraItemSchema[] = [];
   for (const file of files) {
     /**
      * ex. `/wiki
@@ -74,8 +79,13 @@ async function main() {
       .replace(".mdx", "")
       .replace(/\/$/, "");
 
-    const body = fs.readFileSync(file.path);
-    const { content, data } = matter(body);
+    const preFile = await read(file.path);
+    matter(preFile, { strip: true });
+    const frontmatter = preFile.data.matter as {
+      title: string;
+      nav_title: string;
+      description: string;
+    };
 
     const vfile = await unified()
       .use(remarkParse)
@@ -83,26 +93,27 @@ async function main() {
       .use(remarkStringify)
       .use(remarkRetext, Parser)
       .use(retextStringify)
-      .process(content);
+      .process(String(preFile));
 
-    const parentId = id
-      .split("/")
-      .reduce((acc, curr, i, arr) => {
-        if (i === arr.length - 1) {
-          return acc;
-        }
-        return acc.concat(curr);
-      }, [] as string[])
-      .join("/");
+    const parentId = path.dirname(id);
 
+    L.info("id", id, "parentId", parentId);
+    // id        /wiki/terraform/github
+    // parentId: /wiki/terraform
+
+    // get category from parent
+    let category = getObject(tree, "path", parentId.replace(/^\//, ""))?.title;
+    L.info("category", category);
+
+    // this schema helps to decouple changes like frontmatter schema from
+    // the search index schema, which the application depends on
     dataset.push({
       id,
       contents: String(vfile),
-      name: data.name,
-      description: data.description || "",
+      name: String(frontmatter.title),
+      description: String(frontmatter.description),
       // Grab this from one level up
-      // TODO: reimplement after deleting nav data
-      category: null,
+      category: String(category!),
       hierarchy: {
         lvl0: null,
         lvl1: null,
@@ -124,49 +135,30 @@ async function main() {
       description: "string",
     },
   });
+
   await lyra.insertBatch(lyraInstance, dataset, {
     batchSize: 100,
     language: "english",
   });
-  persistence.persistToFile(lyraInstance, "json", "lyra.json");
 
-  console.log("ok");
+  const outputFilename = persistence.persistToFile(
+    lyraInstance,
+    "json",
+    "lyra.json",
+  );
+
+  L.info("indexed", files.length, "documents");
+
+  // read file and copy to website
+  let jsonBlob = await read(outputFilename);
+  jsonBlob.path = path.join(
+    cwd,
+    "../thekevinwang.com",
+    "packages/application/src/lib/lyra.json",
+  );
+  jsonBlob = await write(jsonBlob, {});
+
+  L.ready("copied", outputFilename, "to", jsonBlob.path);
 }
 
 main();
-
-type Node = {
-  name: string;
-  href: string;
-  posts?: Node[];
-  singleFile?: boolean;
-};
-/**
- * This is a helper to look up a NavData node's `name`, given an `href` value
- */
-const getNavDataNameForHref = (
-  navDataList: Node[],
-  href: string,
-): Node | null => {
-  let nodeList = [...navDataList];
-  let found: Node | null = null;
-
-  while (!found) {
-    for (const node of nodeList) {
-      // if exact match, return the node
-      if (href === node.href) {
-        found = node;
-        break;
-      }
-      // key is a child of node (i.e. key contains the node's href  )
-      if (href.includes(node.href)) {
-        if (node.posts) {
-          nodeList = node.posts;
-          break;
-        }
-      }
-    }
-  }
-
-  return found;
-};
