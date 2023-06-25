@@ -57,14 +57,11 @@ type LyraItemSchema = z.infer<typeof LyraItemSchema>;
  */
 async function main() {
   L.info("indexing documents");
-  const cwd = process.cwd();
-  const dir = path.join(cwd, "wiki");
+  // gather all mdx files
+  const files = await findDownAll(".mdx", "wiki");
+  L.info("found", files.length, "files");
 
   const tree = await getTree();
-
-  // gather all mdx files
-  const files = await findDownAll(".mdx", dir);
-  L.info("found", files.length, "files");
 
   let dataset: LyraItemSchema[] = [];
   for (const file of files) {
@@ -74,7 +71,7 @@ async function main() {
      * - should not contain trailing slash
      */
     const id = file.path
-      .replace(cwd, "")
+      .replace(process.cwd(), "")
       .replace("index.mdx", "")
       .replace(".mdx", "")
       .replace(/\/$/, "");

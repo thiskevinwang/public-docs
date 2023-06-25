@@ -1,5 +1,3 @@
-import * as path from "node:path";
-
 import { read } from "to-vfile";
 import { findDownAll } from "vfile-find-down";
 import { matter } from "vfile-matter";
@@ -10,12 +8,7 @@ import { FrontmatterSchema } from "../lib/schema.js";
 // node --loader ts-node/esm scripts/frontmatter.ts
 async function main() {
   L.event("checking frontmatter");
-  const dir = path.join(process.cwd(), "wiki");
-
-  L.info("directory:", dir);
-
-  const files = await findDownAll(".mdx", dir);
-
+  const files = await findDownAll(".mdx", "wiki");
   L.info("found", files.length, "files");
 
   for (const file of files) {
