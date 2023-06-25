@@ -140,11 +140,7 @@ async function listTotree(
 
 export async function main() {
   console.log("hello");
-  const treeJson = await fetchGitTree(
-    "thiskevinwang",
-    "public-docs",
-    "manifestless",
-  );
+  const treeJson = await fetchGitTree("thiskevinwang", "public-docs", "main");
   console.log("ok");
 
   const tree = await listTotree(treeJson);
