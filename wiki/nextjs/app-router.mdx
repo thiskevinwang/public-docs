@@ -128,6 +128,44 @@ Assuming the route on the website is `/foobar/*` expect a change like this:
    function is not a long-term solution as you should split up the data fetching into
    smaller chunks and push it to "leaf nodes", but this is a reasonable migratory step.
 
+### `getStaticPaths`
+
+Migrate `getStaticPaths` to `generateStaticParams`.
+
+(TODO)
+
+The result may look something like this.
+
+```tsx filename="app/tags/[tag]/page.tsx"
+import { getStaticPaths, getStaticProps } from "./data";
+import View from "./view";
+
+export const dynamic = "force-static";
+// https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config#dynamicparams
+export const dynamicParams = false;
+// - true (default): Dynamic segments not included in generateStaticParams are generated on demand.
+// - false: Dynamic segments not included in generateStaticParams will return a 404.
+
+// https://nextjs.org/docs/app/api-reference/functions/generate-static-params
+export async function generateStaticParams() {
+  const { paths } = await getStaticPaths();
+  return paths.map((e) => e.params);
+}
+
+type RouteProps = {
+  params: {
+    tag: string;
+  };
+};
+
+export default async function Page({ params }: RouteProps) {
+  const { props } = await getStaticProps({ params });
+  return <View {...props} params={params} />;
+}
+```
+
+
+
 
 # Hard parts
 
