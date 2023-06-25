@@ -4,6 +4,9 @@ nav_title: App Router
 description: Some Patterns
 ---
 
+
+# Thoughts
+
 I personally don’t like the `/views` folder pattern. 
 
 I _do_ like being able to make a leaf file as slim as possible...
@@ -65,4 +68,81 @@ export default async function BlogPage({ params }) {
   return <BlogView {...props} />;
 }
 ```
+
+# Migration Ideas
+
+> [App Router Incremental Adoption Guide](https://nextjs.org/docs/app/building-your-application/upgrading/app-router-migration) <sup>↗</sup>
+
+
+## Migrating a page
+
+### Static Page
+
+This is a static page with no data dependencies (ie. no `getStaticProps` or `getServerSideProps` exports)
+
+Assuming the route on the website is `/foobar`, expect a change like this:
+
+```diff
+- /pages/foobar/index.tsx
++ /app/foobar/page.tsx
++ /app/foobar/view.tsx
++ /app/foobar/layout.tsx
+```
+
+1. Move `pages/foobar/index.tsx` to `app/foobar/view.tsx`
+   If `index.tsx` uses hooks, add the `'use client';` directive
+1. Create `app/foobar/page.tsx` and import the view component
+   ```tsx filename="./app/foobar/page.tsx"
+   import View from "./view";
+
+   export default function Page() {
+     return <View></View>;
+   }
+   ```
+1. If possible, replace `<Head/>` usage with `export const metadata` or `export const generateMetadata`
+1. If using `Page.getLayout`, this will start to noop. Remove it in favor of a regular `<Layout></Layout>` wrapping component or `layout.tsx` file.
+
+This allows enables the `page` component to remain as a server-component.
+
+### Dynamic Page
+
+This is a dynamic page with data dependencies (ie. `getStaticProps` or `getServerSideProps` exports)
+
+Assuming the route on the website is `/foobar/*` expect a change like this:
+
+```diff
+- /pages/foobar/[...slug].tsx
++ /app/foobar/[...slug]/page.tsx
++ /app/foobar/[...slug]/data.ts
++ /app/foobar/[...slug]/view.tsx
++ /app/foobar/[...slug]/layout.tsx
+```
+
+1. Move `pages/foobar/[...slug].tsx` to `app/foobar/[...slug]/view.tsx`
+   
+   If `[...slug].tsx` uses hooks, add the `'use client';` directive
+1. Move `getStaticProps` to a data file like `server.ts` or `data.ts`
+   Consider adding the [`server-only`](https://nextjs.org/docs/getting-started/react-essentials#the-server-only-package) package: `npm install server-only`
+1. The `page` component will have `{ params }` which can be passed directly to
+   a previous `getStaticProps` function. Keeping around a copy-pasted `getStaticProps`
+   function is not a long-term solution as you should split up the data fetching into
+   smaller chunks and push it to "leaf nodes", but this is a reasonable migratory step.
+
+
+# Hard parts
+
+## `getLayout`
+
+The `Page.getLayout` pattern, which integrates with the central `/pages/_app.tsx` file
+allows for some potentially hairy props exposure, whose migration to the `/app` directory
+is not straightforward.
+
+## Layout to Page communication
+
+If this was being done previously, it's not possible anymore, and this feels like a desirable
+separation.
+
+> Passing data between a parent layout and its children is not possible. However, you can fetch the same data in a route more than once, and React will [automatically dedupe the requests](https://nextjs.org/docs/app/building-your-application/data-fetching#automatic-fetch-request-deduping) without affecting performance.
+>
+> - [ref](https://nextjs.org/docs/app/building-your-application/routing/pages-and-layouts#layouts)
 
