@@ -91,6 +91,12 @@ Sent this other fun boulder problem: https://www.instagram.com/reel/Ct3EhnTPNY4/
 Came up with a nifty terminal AI zsh function:
 
 ```bash
+# ~/.zshrc
+
+# This line executes the following file, which contains
+# export OPENAI_API_KEY=...
+. "$HOME/.openai/credentials"
+
 function ask() {
   mods -f "$1" | glow
 }
