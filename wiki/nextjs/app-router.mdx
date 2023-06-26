@@ -7,21 +7,19 @@ description: Some Patterns
 
 # Thoughts
 
-I personally don’t like the `/views` folder pattern. 
+In `hashicorp/dev-portal, there’s a `/views` folder pattern that I am 
+not particularly fond of. The views folder has a fairly inconsisent
+structure that primarily aims to work around Next.js's
+limitation that all files in the `/pages` directory must be pages.
 
-I _do_ like being able to make a leaf file as slim as possible...
-
-```tsx filename="pages/blog/[...slug]/index.tsx"
-export { default } from "@/views/blog"
-export { getStaticProps, getStaticPaths } from "@/views/blog/server"
-```
-
-But this `/views` folder is mostly arbitrary and a hack around Next.js's
-limitation that all files in the `/pages` directory most be pages.
-
+Keeping the page files small is quite nice, but when you work in a 
+views file, there's very a apparent cognitive disconnect between
+it's own filepath and where it is expected to be rendered on the site
+since the `/views` folder lacks the governance that `/pages` or `/app` implement.
 - https://github.com/vercel/next.js/issues/8454
 
-Now with the `/app` directory, colocation of non-page files is possible.
+Now with the `/app` directory, colocation of non-page files is possible, so the 
+`/views` folder is no longer necessary.
 
 <div style={{marginLeft: "var(--geist-gap)"}}>
   <Tree>
@@ -72,7 +70,6 @@ export default async function BlogPage({ params }) {
 # Migration Ideas
 
 > [App Router Incremental Adoption Guide](https://nextjs.org/docs/app/building-your-application/upgrading/app-router-migration) <sup>↗</sup>
-
 
 ## Migrating a page
 
@@ -164,6 +161,25 @@ export default async function Page({ params }: RouteProps) {
 }
 ```
 
+# Easy parts
+
+## API Routes
+
+### `next-auth`
+
+https://next-auth.js.org/configuration/initialization#route-handlers-app
+
+```ts filename="/app/api/auth/[...nextauth]/route.ts"
+import NextAuth from "next-auth"
+
+const handler = NextAuth({
+  ...
+})
+
+export { handler as GET, handler as POST }
+```
+
+# Medium parts
 
 
 
@@ -172,8 +188,8 @@ export default async function Page({ params }: RouteProps) {
 ## `getLayout`
 
 The `Page.getLayout` pattern, which integrates with the central `/pages/_app.tsx` file
-allows for some potentially hairy props exposure, whose migration to the `/app` directory
-is not straightforward.
+allows for some potentially hairy props exposure, which might make migration to the `/app` directory
+tricky.
 
 ## Layout to Page communication
 
