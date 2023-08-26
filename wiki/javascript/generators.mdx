@@ -1,0 +1,39 @@
+---
+title: Generators
+nav_title: Generators
+description: |
+  Funky syntax
+---
+
+# Generators
+
+```js
+function* iter(count) {
+  for (let i = 0; i < count; i++) {
+    yield i;
+  }
+}
+
+(() => {
+  for (const i of iter(10)) {
+    console.log(i);
+  }
+})()
+```
+
+```js
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+async function* asyncIter(count) {
+  for (let i = 0; i < count; i++) {
+    await sleep(0);
+    yield i;
+  }
+}
+
+(async () => {
+  for await (const i of asyncIter(10)) {
+    console.log(i);
+  }
+})()
+```
