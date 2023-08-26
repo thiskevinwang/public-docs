@@ -5,7 +5,11 @@ description: |
   Funky syntax
 ---
 
-# Generators
+# Docs
+
+[`for await...of`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of)
+
+# Examples
 
 ```js
 function* iter(count) {
@@ -36,4 +40,27 @@ async function* asyncIter(count) {
     console.log(i);
   }
 })()
+```
+
+# Generators vs Iterators
+
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of#iterating_over_async_iterables
+
+# With `Response.body`
+
+```js
+// const res = await fetch(...);
+// const stream = res.body
+async function* streamAsyncIterable(stream) {
+  const reader = stream.getReader();
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) return;
+      yield value;
+    }
+  } finally {
+    reader.releaseLock();
+  }
+}
 ```
